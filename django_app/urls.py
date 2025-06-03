@@ -1,7 +1,20 @@
-from django.urls import path
-from .views import index, profile
+from django.urls import path, register_converter, converters
+from .views import index, profile_user, profiles_list 
+
+
+# class YearConverter:
+#     regex = '[0-9]{4}'
+    
+#     def to_python(self, value):
+#         return int(value)
+    
+#     def to_url(self, value):
+#         return str(value)
+
+# register_converter(converters.YearConverter, 'year')
 
 urlpatterns = [
-    path('index', index, name='index'),
-    path('profile/<int:profile_id>', profile, name='profile'),
+    path('', index, name='index'),
+    path('profiles', profiles_list, name='profiles_list'),
+    path('profile/<int:user_id>/', profile_user, name='profile_user'),
 ]

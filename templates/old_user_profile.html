@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}{{user_data.username}} Profile{% endblock %}
+{% block head %}{% endblock %}
+{% block content %}
+    <nav>
+        <a href="{% url 'index' %}">Home</a>
+        <a href="{% url 'profiles_list' %}">Profiles</a>
+    </nav>
+    <h1>Username: {{ user_data.username }}</h1>
+    <h2>Age: {{ user_data.age }}</h2>
+    <h2>Experience: <span style="color: {% if user_data.experience > 3 %}green
+                                        {% elif user_data.experience < 1 %}red
+                                        {% else %}orange
+                                        {% endif %};">
+                                        {{ user_data.experience }}</span> years
+                                    </h2>
+    
+    <h3>Hobbies:</h3>
+            <ul>
+                <li>{{ user_data.hobbies.0 }}</li>
+                <li>{{ user_data.hobbies.1 }}</li>
+                <li>{{ user_data.hobbies.2 }}</li>
+            </ul>
+        <p>or:</p>
+            <ol>
+                {% for hobby in user_data.hobbies %}
+                <li>{{ hobby }}</li>
+                {% empty %}
+                    No hobbies
+                {% endfor %}
+            </ol>
+        <p>or:</p>
+            <ul>
+                {% for hobby in user_data.hobbies %}
+                    <li>{{ forloop.counter }}. 
+                        {{ hobby }} {% if forloop.first %} - first! 
+                        {% elif forloop.last %} - last! 
+                        {% endif %}</li>
+                {% empty %}
+                    No hobbies
+                {% endfor %}
+            </ul>
+        <p>or:</p>
+            {#  #}
+            <p>{{ user_data.hobbies|join:', ' }}</p>
+
+    <h3>Address:</h3>
+        <p>Street: {{ user_data.address.street }}, City: {{ user_data.address.city }}, State: {{ user_data.address.state }}, Zip: {{ user_data.address.zip }}</p>
+{% endblock %}

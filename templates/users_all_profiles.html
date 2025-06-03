@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Profiles List{% endblock %}
+{% block head %}{% endblock %}
+{% block content %}
+    <Breadcrumb>
+          <nav aria-label="breadcrumb" class="main-breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+              <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'profiles_list' %}">Profiles</a></li>
+            </ol>
+          </nav>
+        </Breadcrumb>
+    <h1>Users: {{ user_count }}</h1>
+            <ul>
+                {% for user_id, user_info in user_data.items %}
+                    <li>{{ forloop.counter }}. 
+                        <a href="{% url 'profile_user' user_id=user_id %}"> 
+                            Name: {{ user_info.username }}, Age: {{ user_info.age }}, Experience: {{ user_info.experience }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+{% endblock %}

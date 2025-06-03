@@ -1,11 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+    <Breadcrumb>
+          <nav aria-label="breadcrumb" class="main-breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'index' %}">Home</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'profiles_list' %}">Profiles</a></li>
+            </ol>
+          </nav>
+    </Breadcrumb>
     <h1>Hello from Django!</h1>
-</body>
-</html>
+{% endblock %}

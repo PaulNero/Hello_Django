@@ -1,8 +1,18 @@
 {% extends 'base.html' %}
 
 {% block title %}Profiles List{% endblock %}
-{% block head %}{% endblock %}
+{% block head %}
+<style>
+    .card {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    }
+</style>
+{% endblock %}
 {% block content %}
+<div class="row gutters-sm">
+    <div class="col-md-4 mb-3">
     <Breadcrumb>
           <nav aria-label="breadcrumb" class="main-breadcrumb">
             <ol class="breadcrumb">
@@ -12,13 +22,31 @@
           </nav>
         </Breadcrumb>
     <h1>Users: {{ user_count }}</h1>
-            <ul>
-                {% for user_id, user_info in user_data.items %}
-                    <li>{{ forloop.counter }}. 
+            <ol>
+                {% for user_id, user_data in user_data.items %}
+                    <div class="card">
+                    <div class="card-body">    
+                        <li>
                         <a href="{% url 'profile_user' user_id=user_id %}"> 
-                            Name: {{ user_info.username }}, Age: {{ user_info.age }}, Experience: {{ user_info.experience }}
+                            <!-- <div class="card">
+                                <div class="card-body"> -->
+                                <div class="d-flex flex-column align-items-center text-center">
+                                    <img src=" {{ user_data.image_url }} " alt="Admin" class="rounded-circle" width="150">
+                                    <div class="mt-3">
+                                    <h4>{{ user_data.first_name }} {{ user_data.last_name }}</h4>
+                                    <p class="text-secondary mb-1">{{ user_data.position }}</p>
+                                    <p class="text-muted font-size-sm">{{ user_data.address.street }}, City: {{ user_data.address.city }}, State: {{ user_data.address.state }}, Zip: {{ user_data.address.zip }}</p>
+                                    </div>
+                                </div>
+                                <!-- </div>
+                            </div> -->
                         </a>
                     </li>
+                    </div>
+                    </div>
+                    
                 {% endfor %}
-            </ul>
+            </ol>
+            </div>
+        </div>
 {% endblock %}

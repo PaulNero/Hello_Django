@@ -1,0 +1,24 @@
+{* load static %} 
+<! DOCTYPE html> 
+<html lang='ru'>
+<head>
+    <meta charset='UTF-8'>
+    <title>{% block title %}Moe приложение{% endblock %}</title>
+    <Link rel='stylesheet' href='{% static "css/styles.css" %}'>
+</head>
+<body>
+    <div class='container'>
+        <nav>
+            <div class='nav-Links'>
+                <a href='(% url "post_list" %)'>Главная</а>
+                <a href=' (% url "about" %)'>O нас</a>
+            </div>
+            <a href='{% url "post_create" %}' class='btn-primary'>Новая запись</а>
+        </nav>
+        {% block content %}{% endblock %}
+    <footer>
+        &copy: 2025 PaulNero
+    </footer>
+</div>
+</body>
+</html>

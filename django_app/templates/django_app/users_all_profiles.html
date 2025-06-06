@@ -6,27 +6,38 @@
     .card {
     position: relative;
     display: flex;
-    flex-direction: row;
+    flex-wrap: wrap; 
+    margin: 12px;
+    padding: 12px; 
     }
 </style>
 {% endblock %}
 {% block content %}
-<div class="row gutters-sm">
-    <div class="col-md-4 mb-3">
+ <div class="container">
     <Breadcrumb>
           <nav aria-label="breadcrumb" class="main-breadcrumb">
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-              <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'profiles_list' %}">Profiles</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Profiles Count: {{ user_count }}</li>
             </ol>
           </nav>
         </Breadcrumb>
-    <h1>Users: {{ user_count }}</h1>
-            <ol>
+    <div class="main-body">
+    <div class="row gutters-sm">
+        
+    <div class="col-md-4 mb-3" style=" 
+            display: flex;
+            flex-wrap: wrap;
+            width: auto;
+            justify-content: flex-start;
+">
+    
+    <!-- <h1>Users: {{ user_count }}</h1> -->
+
                 {% for user_id, user_data in user_data.items %}
                     <div class="card">
                     <div class="card-body">    
-                        <li>
+
                         <a href="{% url 'profile_user' user_id=user_id %}"> 
                             <!-- <div class="card">
                                 <div class="card-body"> -->
@@ -41,12 +52,12 @@
                                 <!-- </div>
                             </div> -->
                         </a>
-                    </li>
+
                     </div>
                     </div>
                     
                 {% endfor %}
-            </ol>
+
             </div>
         </div>
 {% endblock %}

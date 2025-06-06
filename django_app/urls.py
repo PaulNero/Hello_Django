@@ -14,7 +14,6 @@ from .views import index, profile_user, profiles_list
 # register_converter(converters.YearConverter, 'year')
 
 urlpatterns = [
-    path('', index, name='index'),
     path('profiles', profiles_list, name='profiles_list'),
     path('profile/<int:user_id>/', profile_user, name='profile_user'),
 ]

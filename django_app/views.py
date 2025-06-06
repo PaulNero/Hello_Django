@@ -101,14 +101,14 @@ user_data = {
 
 
 def profile_user(request, user_id):
-    if user_id not in user_data:
+    if not user_data:
         return HttpResponseNotFound('User not found')
     
     context = {
         'user_data': user_data[user_id],
         'title': 'User Profile'
     }
-    return render(request, 'user_profile.html', context)
+    return render(request, 'django_app/user_profile.html', context)
 
 def profiles_list(request):
     if len(user_data) == 0 in user_data:
@@ -117,5 +117,5 @@ def profiles_list(request):
         'user_data': user_data,
         'user_count': len(user_data)
     }
-    return render(request, 'users_all_profiles.html', context)
+    return render(request, 'django_app/users_all_profiles.html', context)
     

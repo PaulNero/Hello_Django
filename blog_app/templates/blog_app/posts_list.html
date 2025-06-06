@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block head %}
+<style>
+    .card {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap; 
+    margin: 12px;
+    padding: 12px; 
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <Breadcrumb>
+        <nav aria-label="breadcrumb" class="main-breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page"> All posts</li>
+            </ol>
+        </nav>
+    </Breadcrumb>
+    <div class="main-body">
+        <div class="row gutters-sm">
+            <div class="col-md-4 mb-3" style=" 
+                display: flex;
+                flex-wrap: wrap;
+                width: 100%;
+                justify-content: flex-start;
+            ">
+
+    {% for post in posts %}
+    <div class="card mb-3"> 
+    <div class="card-body"><a href="{% url 'blog_post_detail' post.id %}">
+    <h5 class="card-title">{{ post.title }}</h5>
+    <p class="card-text">{{ post.content }}</p>
+    </a>
+    </div>
+    </div>
+    {% empty %}
+    <p>No posts</p>
+
+
+    {% endfor %}
+
+{% endblock %}

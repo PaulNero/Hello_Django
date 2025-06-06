@@ -2,16 +2,76 @@
 
 {% block title %}Home Page{% endblock %}
 
-{% block head %}{% endblock %}
+{% block head %}
+<style>
+    .card {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap; 
+    margin: 12px;
+    padding: 12px; 
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-    <Breadcrumb>
+<div class="container">
+  <Breadcrumb>
           <nav aria-label="breadcrumb" class="main-breadcrumb">
             <ol class="breadcrumb">
-              <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'index' %}">Home</a></li>
-              <li class="breadcrumb-item"><a href="{% url 'profiles_list' %}">Profiles</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Home</li>
+              <!-- <li class="breadcrumb-item"><a href="{% url 'profiles_list' %}">Profiles</a></li> -->
             </ol>
           </nav>
     </Breadcrumb>
     <h1>Hello from Django!</h1>
+    <div class="main-body">
+    <div class="row gutters-sm">
+        <div class="col-md-4 mb-3" style=" 
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            justify-content: flex-start;
+    ">
+    
+  
+    <div class="card">
+                    <div class="card-body">    
+                        <a href="{% url 'profiles_list' %}"> 
+                                <div class="d-flex flex-column align-items-center text-center">
+                                    <div class="mt-3">
+                                    <p class="text-secondary mb-1">List of users profiles</p>
+                                    </div>
+                                </div>
+                        </a>
+
+                    </div>
+                    </div>
+                    <div class="card">
+                    <div class="card-body">    
+                        <a href="{% url 'posts_list' %}"> 
+                                <div class="d-flex flex-column align-items-center text-center">
+                                    <div class="mt-3">
+                                    <p class="text-secondary mb-1">List of posts</p>
+                                    </div>
+                                </div>
+                        </a>
+
+                    </div>
+                    </div>
+                    <div class="card">
+                    <div class="card-body">    
+                        <a href="{% url 'about' %}"> 
+                                <div class="d-flex flex-column align-items-center text-center">
+                                    <div class="mt-3">
+                                    <p class="text-secondary mb-1">About Us</p>
+                                    </div>
+                                </div>
+                        </a>
+
+                    </div>
+                    </div>
+
+            </div>
+        </div>
 {% endblock %}

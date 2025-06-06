@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+ <div class="container">
+    <div class="main-body">
+    <div class="row gutters-sm">
+    <div class="col-md-4 mb-3">
+    <Breadcrumb>
+          <nav aria-label="breadcrumb" class="main-breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'posts_list' %}">All posts</a></li>
+              <li class="breadcrumb-item active" aria-current="page">{{ post.title }}</li>
+            </ol>
+          </nav>
+    </Breadcrumb>
+    <h1>{{ post.title }}</h1>
+    <p>{{ post.content }}</p>
+    
+
+
+{% endblock %}

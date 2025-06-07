@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone # Импортируем timezone
+from django.urls import reverse
 
 class Post(models.Model):
     # Поля модели (соответствуют столбцам в таблице)
@@ -18,8 +19,11 @@ class Post(models.Model):
     
     # Метод для строкового представления объекта
 
-    def __str__(self):
+    def __str__(self): 
         return f'{self.title}, {self.content[:20]}, {self.created_at.time()}'
+    
+    def get_absolute_url(self):
+        return reverse('blog_post_detail', kwargs = {'pk': self.pk})
 
     # Create your models here.
 
@@ -28,7 +32,9 @@ class Post(models.Model):
         verbose_name = 'Post'
         verbose_name_plural = 'Posts'
 
-class Comment(models.Model):
+    
+
+class Comment(models.Model): 
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     author = models.ForeignKey('django_app.Profile', default=None, on_delete=models.SET_NULL ,null=True, max_length=200)
     content = models.TextField()
@@ -37,3 +43,5 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'{self.author}, {self.content[:20]}, {self.created_at.time()}'
+    
+    

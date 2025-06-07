@@ -37,7 +37,7 @@
                 justify-content: flex-start;
             ">
     <ul class = 'list-group'>
-    {% for post in posts %}
+    {% for post in posts.object_list %}
         <div class="card mb-3"> 
             <li class='list-group-item'>
                 <div class="card-body"><a href="{% url 'blog_post_detail' post.pk %}">
@@ -57,10 +57,25 @@
                 </div>
             </li>
         </div>
+            {# Навигация по страницам #}
+            <div class="pagination">
+            <span class="step-links">
+            {% if page_obj.has_previous %}
+            <a href="?page=1">« первая</a>
+            <a href="?page={{ posts.previous_page_number }}">предыдущая</a>
+            {% endif %}
+            <span class="current">
+            Страница {{ posts.number }} из {{ posts.paginator.num_pages }}.
+            </span>
+            {% if posts.has_next %}
+            <a href="?page={{ posts.next_page_number }}">следующая</a>
+            <a href="?page={{ posts.paginator.num_pages }}">последняя »</a>
+            {% endif %}
+            </span>
+            </div>
+        </div>
     {% empty %}
     <p>No posts</p>
-
-
     {% endfor %}
     </ul>
 

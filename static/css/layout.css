@@ -1,0 +1,65 @@
+/* 
+Layout styles
+    Отвечает за общую структуру страницы
+    Содержит стили для header, main и footer
+    Определяет контейнеры и сетку
+    Включает медиа-запросы для адаптивности
+*/
+.site-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: var(--spacing-medium) 0;
+}
+
+.site-main {
+    min-height: calc(100vh - 200px); /* Высота минус header и footer */
+    padding: var(--spacing-large) 0;
+}
+
+.site-footer {
+    background-color: var(--primary-color);
+    color: white;
+    padding: var(--spacing-medium) 0;
+}
+
+/* Container */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-medium);
+}
+
+/* Grid system */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 calc(-1 * var(--spacing-small));
+}
+
+.col {
+    flex: 1 0 0%;
+    padding: 0 var(--spacing-small);
+}
+
+/* Responsive breakpoints */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 var(--spacing-small);
+    }
+    
+    .site-main {
+        padding: var(--spacing-medium) 0;
+    }
+}
+
+@media (max-width: 576px) {
+    .row {
+        flex-direction: column;
+    }
+    
+    .col {
+        width: 100%;
+        margin-bottom: var(--spacing-medium);
+    }
+} 

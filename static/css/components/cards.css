@@ -1,0 +1,86 @@
+/* 
+Card styles:
+    Стили для карточек
+    Различные варианты карточек (primary, secondary, accent)
+    Эффекты при наведении
+    Стили для header, body и footer карточек
+*/
+.card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: var(--spacing-medium);
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 12px;
+    padding: 12px;
+}
+
+.card-header {
+    padding: var(--spacing-medium);
+    background-color: var(--secondary-color);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+    padding: var(--spacing-medium);
+}
+
+.card-footer {
+    padding: var(--spacing-medium);
+    background-color: var(--secondary-color);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Card variants */
+.card-primary {
+    border-top: 4px solid var(--primary-color);
+}
+
+.card-secondary {
+    border-top: 4px solid var(--secondary-color);
+}
+
+.card-accent {
+    border-top: 4px solid var(--accent-color);
+}
+
+/* Card hover effects */
+.card-hover {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Card layouts */
+.card-flex {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: flex-start;
+}
+
+.card-flex-auto {
+    display: flex;
+    flex-wrap: wrap;
+    width: auto;
+    justify-content: flex-start;
+}
+
+.card-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 12px;
+} 
+
+.posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+}

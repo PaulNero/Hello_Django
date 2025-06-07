@@ -1,0 +1,60 @@
+/* 
+Progress styles:
+    Стили для прогресс-баров
+    Различные варианты и размеры
+    Анимации
+*/
+.progress {
+    background-color: var(--secondary-color);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    background-color: var(--primary-color);
+    height: 5px;
+    transition: width 0.3s ease;
+}
+
+/* Progress variants */
+.progress-bar-primary {
+    background-color: var(--primary-color);
+}
+
+.progress-bar-secondary {
+    background-color: var(--secondary-color);
+}
+
+.progress-bar-accent {
+    background-color: var(--accent-color);
+}
+
+/* Progress sizes */
+.progress-sm {
+    height: 3px;
+}
+
+.progress-md {
+    height: 5px;
+}
+
+.progress-lg {
+    height: 8px;
+}
+
+/* Progress animations */
+.progress-animated .progress-bar {
+    animation: progress-animation 1s ease-in-out infinite;
+}
+
+@keyframes progress-animation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+} 

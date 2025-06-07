@@ -60,9 +60,9 @@ class PostUpdateView(UpdateView):
 
 def posts_list_paginated(request):
         # Важна сортировка!
-        all_posts_qs = Post.objects.filter(is_published=True).order_by('-created_at')
+        all_posts_qs = Post.published.filter(is_published=True).order_by('-created_at')
         # 1. Создаем Paginator (10 постов на страницу)
-        paginator = Paginator(all_posts_qs, 4)
+        paginator = Paginator(all_posts_qs, 3)
         # 2. Получаем номер страницы из GET-параметра (?page=...)
         page_number = request.GET.get('page')
         # 3. Получаем объект Page для нужной страницы

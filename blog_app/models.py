@@ -2,6 +2,11 @@ from django.db import models
 from django.utils import timezone # Импортируем timezone
 from django.urls import reverse
 
+class PublishedManager(models.Manager):
+
+    def get_queryset(self):
+        return super().get_queryset().filter(is_published=True)
+
 class Post(models.Model):
     # Поля модели (соответствуют столбцам в таблице)
     title = models.CharField(max_length=200)
@@ -16,6 +21,8 @@ class Post(models.Model):
     # Обновляется при каждом сохранении записи
     updated_at = models.DateTimeField(auto_now=True)
     is_published = models.BooleanField(default=True)
+
+    published = PublishedManager()
     
     # Метод для строкового представления объекта
 

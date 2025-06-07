@@ -1,0 +1,76 @@
+/* 
+Base styles 
+    Содержит базовые стили и переменные
+    Определяет цветовую схему через CSS-переменные
+    Задает базовые размеры шрифтов и отступов
+    Содержит сброс стилей и базовую типографику
+    Включает утилитарные классы для отступов и выравнивания
+*/
+:root {
+    /* Цветовая схема */
+    --primary-color: #1d4594;
+    --secondary-color: #e2e8f0;
+    --accent-color: #4a5568;
+    --text-color: #2d3748;
+    --background-color: #f7fafc;
+    
+    /* Размеры шрифтов */
+    --font-size-base: 16px;
+    --font-size-small: 14px;
+    --font-size-large: 18px;
+    
+    /* Отступы */
+    --spacing-unit: 8px;
+    --spacing-small: calc(var(--spacing-unit) * 1);
+    --spacing-medium: calc(var(--spacing-unit) * 2);
+    --spacing-large: calc(var(--spacing-unit) * 3);
+}
+
+/* Reset styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: var(--font-size-base);
+    line-height: 1.5;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: var(--spacing-medium);
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+p {
+    margin-bottom: var(--spacing-medium);
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--accent-color);
+}
+
+/* Utility classes */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-left { text-align: left; }
+
+.mt-1 { margin-top: var(--spacing-small); }
+.mt-2 { margin-top: var(--spacing-medium); }
+.mt-3 { margin-top: var(--spacing-large); }
+
+.mb-1 { margin-bottom: var(--spacing-small); }
+.mb-2 { margin-bottom: var(--spacing-medium); }
+.mb-3 { margin-bottom: var(--spacing-large); } 

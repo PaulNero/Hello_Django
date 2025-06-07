@@ -1,0 +1,107 @@
+/* 
+Form styles: 
+    Стили для форм и их элементов
+    Стили для input, select, checkbox
+    Состояния валидации
+    Различные варианты расположения форм
+*/
+.form-group {
+    margin-bottom: var(--spacing-medium);
+}
+
+.form-label {
+    display: block;
+    margin-bottom: var(--spacing-small);
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: var(--spacing-small);
+    font-size: var(--font-size-base);
+    line-height: 1.5;
+    color: var(--text-color);
+    background-color: white;
+    border: 1px solid var(--secondary-color);
+    border-radius: 4px;
+    transition: border-color 0.2s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(26, 32, 44, 0.1);
+}
+
+/* Form validation states */
+.form-control.is-invalid {
+    border-color: #e53e3e;
+}
+
+.form-control.is-valid {
+    border-color: #38a169;
+}
+
+.form-feedback {
+    display: block;
+    margin-top: var(--spacing-small);
+    font-size: var(--font-size-small);
+}
+
+.form-feedback.is-invalid {
+    color: #e53e3e;
+}
+
+.form-feedback.is-valid {
+    color: #38a169;
+}
+
+/* Form elements */
+.form-select {
+    display: block;
+    width: 100%;
+    padding: var(--spacing-small);
+    font-size: var(--font-size-base);
+    line-height: 1.5;
+    color: var(--text-color);
+    background-color: white;
+    border: 1px solid var(--secondary-color);
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--spacing-small);
+}
+
+.form-check-input {
+    margin-right: var(--spacing-small);
+}
+
+.form-check-label {
+    font-size: var(--font-size-base);
+    color: var(--text-color);
+}
+
+/* Form layouts */
+.form-inline {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    gap: var(--spacing-medium);
+}
+
+.form-inline .form-group {
+    margin-bottom: 0;
+}
+
+@media (max-width: 576px) {
+    .form-inline {
+        flex-direction: column;
+        align-items: stretch;
+    }
+} 

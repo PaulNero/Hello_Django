@@ -1,0 +1,80 @@
+/* 
+Button styles: 
+    Базовые стили кнопок
+    Различные варианты (primary, secondary, accent)
+    Размеры кнопок (sm, lg)
+    Состояния (disabled, hover)
+    Стили для кнопок с иконками
+*/
+.btn {
+    display: inline-block;
+    padding: var(--spacing-small) var(--spacing-medium);
+    border-radius: 4px;
+    border: none;
+    font-size: var(--font-size-base);
+    font-weight: 500;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Button variants */
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-color);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+}
+
+.btn-secondary:hover {
+    background-color: #cbd5e0;
+}
+
+.btn-accent {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.btn-accent:hover {
+    background-color: #2d3748;
+}
+
+/* Button sizes */
+.btn-sm {
+    padding: calc(var(--spacing-small) / 2) var(--spacing-small);
+    font-size: var(--font-size-small);
+}
+
+.btn-lg {
+    padding: var(--spacing-medium) var(--spacing-large);
+    font-size: var(--font-size-large);
+}
+
+/* Button states */
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
+}
+
+/* Button with icon */
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-small);
+}
+
+.btn-icon i {
+    font-size: 1.2em;
+} 

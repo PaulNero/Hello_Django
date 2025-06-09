@@ -37,6 +37,12 @@ class PostDetailView(DetailView):
     context_object_name = 'post'
     pk_url_kwarg = 'pk'
     # queryset = Post.objects.filter(is_published=True)
+    
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        self.object.views += 1
+        self.object.save(update_fields=['views'])
+        return self.object
 
 class PostDeleteView(DeleteView):
     model = Post

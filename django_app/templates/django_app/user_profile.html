@@ -27,6 +27,7 @@
                     <img src=" {{ user_data.image_url }} " alt="Admin" class="rounded-circle" width="150">
                     <div class="mt-3">
                       <h4>{{ user_data.first_name }} {{ user_data.last_name }}</h4>
+                      <h4>{{ user_data.nickname }}</h4>
                       <p class="text-secondary mb-1">{{ user_data.position }}</p>
                       <p class="text-muted font-size-sm">{{ user_data.address.street }}, City: {{ user_data.address.city }}, State: {{ user_data.address.state }}, Zip: {{ user_data.address.zip }}</p>
                       <button class="btn btn-primary">Follow</button>
@@ -110,7 +111,7 @@
                   <hr>
                   <div class="row">
                     <div class="col-sm-12">
-                      <a class="btn btn-info " target="__blank" href="https://www.bootdey.com/snippets/view/profile-edit-data-and-skills">Edit</a>
+                      <a class="btn btn-primary" target="__blank" href="{% url 'user_update' user_data.pk %}">Edit</a>
                     </div>
                   </div>
                 </div>

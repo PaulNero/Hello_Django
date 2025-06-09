@@ -79,6 +79,14 @@ Card styles:
     margin-top: 12px;
 } 
 
+.card-all-user {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap; 
+    margin: 12px;
+    padding: 12px; 
+    }
+
 .posts-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));

@@ -21,6 +21,7 @@ class Post(models.Model):
     # Обновляется при каждом сохранении записи
     updated_at = models.DateTimeField(auto_now=True)
     is_published = models.BooleanField(default=True)
+    views = models.PositiveIntegerField(default=0)
 
     published = PublishedManager()
     

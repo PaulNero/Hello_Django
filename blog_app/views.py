@@ -1,9 +1,11 @@
-from django.shortcuts import render
+from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Post, Comment
 from django.views.generic import TemplateView, ListView, DetailView, DeleteView, CreateView, UpdateView
-from .models import Post
+from django.views.decorators.http import require_POST
 from django.urls import reverse_lazy,  reverse
 from django.core.paginator import Paginator
+
 
 
 
@@ -76,3 +78,30 @@ def posts_list_paginated(request):
         # 4. Передаем объект Page в контекст
         context = {'posts': page_obj}
         return render(request, 'blog_app/post_list_paginated.html', context)
+
+class CommentCreateView(CreateView):
+    model = Comment
+    template_name = "blog_app/blog_post.html"
+    fields = ['content']
+    # success_url = reverse_lazy('posts_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post = get_object_or_404(Post, pk=self.kwargs['pk'])
+        context['post'] = post
+        return context
+
+    def form_valid(self, form):
+        # Привязка комментария к посту
+        post = get_object_or_404(Post, pk=self.kwargs['pk'])
+        form.instance.post = post
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('blog_post_detail', kwargs={'pk': self.kwargs['pk']})
+
+# @require_POST
+# def create_comment(request: HttpRequest, pk: int) -> HttpResponse:
+#     post = get_object_or_404(Post, pk=pk)
+#     post.comments.create(content=request.POST['content'])
+#     return redirect('blog_post_detail', pk=post.pk)

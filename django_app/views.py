@@ -139,9 +139,9 @@ class UserDetailView(DetailView):
 
 class UserDeleteView(DeleteView):
     model = Profile
-    template_name = 'django_app/user_confirm_delete.html'
-    context_object_name = 'user'
-    success_url = reverse_lazy('user_all_profiles')
+    template_name = 'django_app/user_delete.html'
+    context_object_name = 'user_data'
+    success_url = reverse_lazy('profiles_list')
     pk_url_kwarg = 'pk'
 
 class UserCreateView(CreateView):

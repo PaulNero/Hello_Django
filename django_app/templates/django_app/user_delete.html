@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete {{ user_data.title }}?{% endblock %}
+
+
+{% block head %}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="main-body">
+    <div class="row gutters-sm">
+        <div class="col-md-4 mb-3">
+        <Breadcrumb>
+            <nav aria-label="breadcrumb" class="main-breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'profiles_list' %}">Profiles</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Delete {{ user_data.nickname }}</li>
+                </ol>
+            </nav>
+        </Breadcrumb>
+
+        <form method="post">
+        {% csrf_token %}
+            <p>Would you delete "{{ user_data.nickname }}" page?</p>
+        {{ form }}
+        <input class="btn btn-danger" type="submit" value="Delete">
+    </form>
+{% endblock %}
+
+{% block footer %}{% endblock %}

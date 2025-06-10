@@ -1,0 +1,7 @@
+<form class="Form" method="post" action="{% url 'comment_create' post_pk %}">
+    {% csrf_token %}
+    {{ form.as_p}}
+    <!-- <input type="text" class="form-control" placeholder="Enter comment" name="content" required> -->
+    <input class="btn btn-primary" type="submit" value="Send">
+
+</form>

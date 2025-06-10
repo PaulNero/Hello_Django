@@ -43,7 +43,9 @@ class Post(models.Model):
     
 
 class Comment(models.Model): 
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, 
+                                related_name='comments', 
+                                related_query_name='comment') 
     author = models.ForeignKey('django_app.Profile', default=None, on_delete=models.SET_NULL ,null=True, max_length=200)
     content = models.TextField()
     created_at = models.DateTimeField(default=timezone.now)
@@ -52,4 +54,5 @@ class Comment(models.Model):
     def __str__(self):
         return f'{self.author}, {self.content[:20]}, {self.created_at.time()}'
     
-    
+    class Meta:
+        ordering = ['-created_at']

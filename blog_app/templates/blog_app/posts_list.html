@@ -27,6 +27,7 @@
                             {% if not post.is_published %}<em> (черновик)</em>{% endif %}
                         <p class="card-text">{{ post.content }}</p>
                         <p class="text-muted">👀: {{ post.views }}</p>
+                        <p class="text-muted">💬: {{ post.comments.count }}</p>
                         <div class="card-actions">
                             <a href="{% url 'post_update' post.pk %}" class="btn btn-primary">Edit</a>
                             <a href="{% url 'post_delete' post.pk %}" class="btn btn-danger">Delete</a>

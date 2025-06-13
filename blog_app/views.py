@@ -76,7 +76,10 @@ def posts_list_paginated(request):
         # 3. Получаем объект Page для нужной страницы
         page_obj = paginator.get_page(page_number)
         # 4. Передаем объект Page в контекст
-        context = {'posts': page_obj}
+        context = {
+            'posts': page_obj,
+            'total_count': all_posts_qs.count()
+            }
         return render(request, 'blog_app/post_list_paginated.html', context)
 
 class CommentCreateView(CreateView):

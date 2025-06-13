@@ -1,6 +1,6 @@
 from django.urls import path, register_converter, converters
 # from .views import index, profile_user, profiles_list 
-from .views import index, UsersListView, UserDetailView, UserUpdateView, UserCreateView, UserDeleteView
+from .views import index, UsersListView, UserDetailView, UserUpdateView, UserCreateView, UserDeleteView, users_list_paginated
 
 # class YearConverter:
 #     regex = '[0-9]{4}'
@@ -19,9 +19,10 @@ from .views import index, UsersListView, UserDetailView, UserUpdateView, UserCre
 # ]
 
 urlpatterns = [
-    path('profiles', UsersListView.as_view(), name='profiles_list'),
+    # path('profiles', UsersListView.as_view(), name='profiles_list'),
     path('profile/<int:pk>/', UserDetailView.as_view(), name='profile_user'),
     path('profile/update/<int:pk>/', UserUpdateView.as_view(), name='user_update'),
     path('profile/create/', UserCreateView.as_view(), name='user_registration'),
     path('post/delete/<int:pk>/', UserDeleteView.as_view(), name='user_delete'),
+    path('profiles', users_list_paginated, name='profiles_list'),
 ]

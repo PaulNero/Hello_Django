@@ -70,13 +70,16 @@ def posts_list_paginated(request):
         # Важна сортировка!
         all_posts_qs = Post.published.filter(is_published=True).order_by('-created_at')
         # 1. Создаем Paginator (10 постов на страницу)
-        paginator = Paginator(all_posts_qs, 3)
+        paginator = Paginator(all_posts_qs, 6)
         # 2. Получаем номер страницы из GET-параметра (?page=...)
         page_number = request.GET.get('page')
         # 3. Получаем объект Page для нужной страницы
         page_obj = paginator.get_page(page_number)
         # 4. Передаем объект Page в контекст
-        context = {'posts': page_obj}
+        context = {
+            'posts': page_obj,
+            'total_count': all_posts_qs.count()
+            }
         return render(request, 'blog_app/post_list_paginated.html', context)
 
 class CommentCreateView(CreateView):

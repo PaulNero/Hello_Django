@@ -1,8 +1,10 @@
 from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
 from django.views.generic import ListView, DetailView, DeleteView, CreateView, UpdateView
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy,  reverse 
 from .models import Profile
+
 
 profiles = {}
 
@@ -134,8 +136,6 @@ class UserDetailView(DetailView):
     template_name = 'django_app/user_profile.html'
     context_object_name = 'user_data'
     pk_url_kwarg = 'pk'
-    # queryset = Post.objects.filter(is_published=True)
-
 
 class UserDeleteView(DeleteView):
     model = Profile
@@ -184,15 +184,18 @@ class UserUpdateView(UpdateView):
     
     
 
-# def posts_list_paginated(request):
-#         # Важна сортировка!
-#         all_posts_qs = Profile.published.filter(is_published=True).order_by('-created_at')
-#         # 1. Создаем Paginator (10 постов на страницу)
-#         paginator = Paginator(all_posts_qs, 3)
-#         # 2. Получаем номер страницы из GET-параметра (?page=...)
-#         page_number = request.GET.get('page')
-#         # 3. Получаем объект Page для нужной страницы
-#         page_obj = paginator.get_page(page_number)
-#         # 4. Передаем объект Page в контекст
-#         context = {'posts': page_obj}
-#         return render(request, 'blog_app/post_list_paginated.html', context)
+def users_list_paginated(request):
+        # Важна сортировка!
+        all_users_qs = Profile.objects.order_by('nickname')
+        # 1. Создаем Paginator (10 постов на страницу)
+        paginator = Paginator(all_users_qs, 6)
+        # 2. Получаем номер страницы из GET-параметра (?page=...)
+        page_number = request.GET.get('page')
+        # 3. Получаем объект Page для нужной страницы
+        page_obj = paginator.get_page(page_number)
+        # 4. Передаем объект Page в контекст
+        context = {
+            'users_data': page_obj,
+            'total_count': all_users_qs.count()
+            }
+        return render(request, 'django_app/users_list_paginated.html', context)

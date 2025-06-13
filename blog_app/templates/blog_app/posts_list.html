@@ -23,11 +23,14 @@
             <div class="card">
                 <li class='list-group-item'>
                     <div class="card-body"><a href="{% url 'blog_post_detail' post.pk %}">
-                        <h5 class="card-title">{{ post.title }}</h5></a>
-                            {% if not post.is_published %}<em> (черновик)</em>{% endif %}
+                        <h5 class="card-title">{{ post.title }} {% if not post.is_published %}<em> (черновик)</em>{% endif %}</h5></a>
+                            <h6 class="text-muted">Category: {{ post.category.name }}</h6>
                         <p class="card-text">{{ post.content }}</p>
                         <p class="text-muted">👀: {{ post.views }}</p>
                         <p class="text-muted">💬: {{ post.comments.count }}</p>
+                        <img class="rounded-circle avatar-img-mini" src="{{ post.author.get_avatar_url }}" alt="User Avatar">
+                        <p class="text-muted">✍️: {{ post.author.nickname }}</p>
+                        <p class="text-muted">Создано: {{ post.created_at|date:"H:i d.m.Y" }}</p>
                         <div class="card-actions">
                             <a href="{% url 'post_update' post.pk %}" class="btn btn-primary">Edit</a>
                             <a href="{% url 'post_delete' post.pk %}" class="btn btn-danger">Delete</a>

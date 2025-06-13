@@ -134,8 +134,6 @@ class UserDetailView(DetailView):
     template_name = 'django_app/user_profile.html'
     context_object_name = 'user_data'
     pk_url_kwarg = 'pk'
-    # queryset = Post.objects.filter(is_published=True)
-
 
 class UserDeleteView(DeleteView):
     model = Profile

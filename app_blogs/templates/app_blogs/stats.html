@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Statistics{% endblock %}
+
+{% block content %}
+<div class="container">
+    <Breadcrumb>
+        <nav aria-label="breadcrumb" class="main-breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Posts Statistic</li>
+            </ol>
+        </nav>
+    </Breadcrumb>
+    <div class="card">
+        <h1>Statistics</h1>
+        <p>Total posts: {{ total_posts }}</p>
+        <p>Avg comments: {{ avg_comments }}</p>
+        <p>Total comments: {{ total_comments }}</p>
+        <p class="muted-text">Avg comments on post: в разработке </p>
+        <p>Avg views: {{ avg_views }}</p>
+        <p>Max views: {{ max_views }}</p>
+        <p>Min views: {{ min_views }}</p>
+        <p>Unique post author: {{  unique_posts_authors }}
+        <p>Unique comment author: {{  unique_comments_authors }}
+    </div>
+</div>
+{% endblock %}

@@ -5,10 +5,16 @@ from django.templatetags.static import static
 # Create your models here.
 class Profile(models.Model):
     
-    class SexChoices(models.TextChoices):
-        MALE = 'M', 'MALE'
-        FEMALE = 'F', 'FEMALE'
-        OTHER = 'O', 'OTHER'
+    # class SexChoices(models.TextChoices):
+    #     MALE = 'M', 'MALE'
+    #     FEMALE = 'F', 'FEMALE'
+    #     OTHER = 'O', 'OTHER'
+
+    USER_SEX_CHOICES = (
+        ("M", "MALE"),
+        ("F", "FEMALE"),
+        ("O", "OTHER")
+    )
 
     id = models.AutoField(primary_key=True)
     first_name = models.CharField(max_length=50, null=True, blank=True)
@@ -16,7 +22,7 @@ class Profile(models.Model):
     nickname = models.CharField(max_length=50, null=False, unique=True)
     image_url = models.URLField(max_length=300, null=True, blank=True)
     age = models.IntegerField(null=True, blank=True)
-    sex = models.CharField(choices=SexChoices.choices, default=SexChoices.MALE)
+    sex = models.CharField(choices=USER_SEX_CHOICES, default=USER_SEX_CHOICES[0][0])
     position = models.CharField(max_length=100, null=True, blank=True)
     experience = models.FloatField(null=True, blank=True)
     hobbies = models.JSONField(null=True, blank=True)   

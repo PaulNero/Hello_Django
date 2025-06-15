@@ -5,22 +5,7 @@ from django.views.generic import TemplateView, ListView, DetailView, DeleteView,
 from django.views.decorators.http import require_POST
 from django.urls import reverse_lazy,  reverse
 from django.core.paginator import Paginator
-
-
-
-
-
-
-# Create your views here.
-# def posts_list(request):
-#     posts = Post.objects.filter(is_published=True)
-#     return render(request, 'app_blogs/posts_list.html', {'posts': posts})
-
-# def blog_post_detail(request, post_id):
-#     post = Post.objects.get(id=post_id)     
-#     comments = Comment.objects.filter(post=post)
-#     comments_count = len(Comment.objects.filter(post=post))
-#     return render(request, 'app_blogs/blog_post.html', {'post': post, 'comments': comments, 'comments_count': comments_count})
+from django.db.models import Count, Avg, Min, Max, F
 
 class AboutView(TemplateView):
     template_name = 'about.html'
@@ -33,18 +18,30 @@ class PostListView(ListView):
     # queryset = Post.objects.filter(is_published=True)
     paginate_by = 10
 
+    # def get_queryset(self):
+    #     return (Post.objects
+    #         .annotate(
+    #             author_nickname=F('author__nickname'),
+    #             author_image=F('author__image_url'),
+    #             category__name=F('category__name'),
+    #         )
+    #         .value('pk', 'title', 'content', 'views', 'author_nickname', 'author_image_url', 'category_name', 'created_at', 'tags__name'))
+
 class PostDetailView(DetailView):
     model = Post
-    template_name = 'app_blogs/blog_post.html'
+    template_name = 'app_blogs/post_detail.html'
     context_object_name = 'post'
     pk_url_kwarg = 'pk'
     # queryset = Post.objects.filter(is_published=True)
-    
-    def get_object(self, queryset=None):
-        self.object = super().get_object(queryset)
-        self.object.views += 1
+
+    # Избежание race condition :TODO Реализовать подобное для всех подсчетов в будущем
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        # F-выражение — это способ сказать «обнови поле относительно его текущего значения» прямо в SQL.
+        self.object.views = F('views') + 1
         self.object.save(update_fields=['views'])
-        return self.object
+        self.object.refresh_from_db(fields=['views'])
+        return super().get(request, *args, **kwargs)
 
 class PostDeleteView(DeleteView):
     model = Post
@@ -56,19 +53,19 @@ class PostDeleteView(DeleteView):
 class PostCreateView(CreateView):
     model = Post
     template_name = "app_blogs/post_create.html"
-    fields = ['title', 'content', 'is_published']
+    fields = ['title', 'content', 'status']
     # success_url = reverse_lazy('posts_list')
 
 class PostUpdateView(UpdateView):
     model = Post
     template_name = "app_blogs/post_update.html"
-    fields = ['title', 'content', 'is_published']
+    fields = ['title', 'content', 'status']
     pk_url_kwarg = 'pk'
     # success_url = reverse_lazy('posts_list')
 
 def posts_list_paginated(request):
         # Важна сортировка!
-        all_posts_qs = Post.published.filter(is_published=True).order_by('-created_at')
+        all_posts_qs = Post.objects.order_by('-created_at')
         # 1. Создаем Paginator (10 постов на страницу)
         paginator = Paginator(all_posts_qs, 6)
         # 2. Получаем номер страницы из GET-параметра (?page=...)
@@ -82,9 +79,17 @@ def posts_list_paginated(request):
             }
         return render(request, 'app_blogs/post_list_paginated.html', context)
 
+        def get_queryset(self):
+            # return post.objects.annotate(comments_count=Count('comments'))
+            return (Post.objects
+                # .filter(is_published=True)
+                .select_related('author', 'category')
+                .prefetch_related('tags'))
+
+
 class CommentCreateView(CreateView):
     model = Comment
-    template_name = "app_blogs/blog_post.html"
+    template_name = "app_blogs/post_detail.html"
     fields = ['content']
     # success_url = reverse_lazy('posts_list')
     
@@ -101,10 +106,31 @@ class CommentCreateView(CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('blog_post_detail', kwargs={'pk': self.kwargs['pk']})
+        return reverse('post_detail', kwargs={'pk': self.kwargs['pk']})
 
 # @require_POST
 # def create_comment(request: HttpRequest, pk: int) -> HttpResponse:
 #     post = get_object_or_404(Post, pk=pk)
 #     post.comments.create(content=request.POST['content'])
-#     return redirect('blog_post_detail', pk=post.pk)
+#     return redirect('post_detail', pk=post.pk)
+
+def posts_stats(request:HttpRequest) -> HttpResponse:
+    posts_stats = Post.objects.aggregate(
+        total_posts=Count('pk'), # Общее количество постов
+        # average_rating=Avg('rating'), # Средний рейтинг
+        # min_rating=Min('rating'), # Минимальный рейтинг
+        # max_rating=Max('rating'), # Максимальный рейтинг
+        avg_views=Avg('views'),
+        min_views=Min('views'),
+        max_views=Max('views'),
+        # avg_comments_on_post=Avg("comment__count"), # Среднее количество комментариев на пост
+        avg_comments=Avg('comment'), 
+        unique_posts_authors=Count('author', distinct=True) # Количество уникальных авторов
+        )
+    
+    comment_stats = Comment.objects.aggregate(
+        total_comments=Count("pk"),
+        unique_comments_authors=Count('author', distinct=True),
+        )
+    posts_stats.update(comment_stats)
+    return render(request, 'app_blogs/stats.html', context=posts_stats)

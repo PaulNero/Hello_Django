@@ -22,8 +22,8 @@
             {% for post in posts %}
             <div class="card">
                 <li class='list-group-item'>
-                    <div class="card-body"><a href="{% url 'blog_post_detail' post.pk %}">
-                        <h5 class="card-title">{{ post.title }} {% if not post.is_published %}<em> (черновик)</em>{% endif %}</h5></a>
+                    <div class="card-body"><a href="{% url 'post_detail' post.pk %}">
+                        <h5 class="card-title">{{ post.title }} {% if post.status == 'draft' %}<em> (черновик)</em>{% endif %}</h5></a>
                             <h6 class="text-muted">Category: {{ post.category.name }}</h6>
                         <p class="card-text">{{ post.content }}</p>
                         <p class="text-muted">👀: {{ post.views }}</p>

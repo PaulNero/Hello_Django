@@ -16,14 +16,16 @@
     </Breadcrumb>
     <div class="main-body">
         <div>
-            <a href="{% url 'post_create' %}" class="btn btn-primary"> Новая запись </a>
+            <a href="{% url 'post_create' %}" class="btn btn-primary"> New post </a>
+            <a href="{% url 'posts_stats' %}" class="btn btn-primary"> Statistics </a>
         </div>
         <div class="posts-grid">
             {% for post in posts %}
             <div class="card">
                 <li class='list-group-item'>
-                    <div class="card-body"><a href="{% url 'blog_post_detail' post.pk %}">
-                        <h5 class="card-title">{{ post.title }} {% if not post.is_published %}<em> (черновик)</em>{% endif %}</h5></a>
+                    <div class="card-body"><a href="{% url 'post_detail' post.pk %}">
+                        <h5 class="card-title">{{ post.title }}</h5></a>
+                            <h6 class="text-muted">Status: {{ post.status }}</h6>
                             <h6 class="text-muted">Category: {{ post.category.name }}</h6>
                             <h6 class="text-muted">
                                 Tags:   
@@ -38,12 +40,12 @@
                         <p class="text-muted">💬: {{ post.comments.count }}</p>
                         <img class="rounded-circle avatar-img-mini" src="{{ post.author.get_avatar_url }}" alt="User Avatar">
                         <p class="text-muted">✍️: {{ post.author.nickname }}</p>
-                        <p class="text-muted">Создано: {{ post.created_at|date:"H:i d.m.Y" }}</p>
-                        <div class="card-actions">
-                            <a href="{% url 'post_update' post.pk %}" class="btn btn-primary">Edit</a>
-                            <a href="{% url 'post_delete' post.pk %}" class="btn btn-danger">Delete</a>
-                        </div>
-                    </div>
+                        {% if post.created_at !=  post.updated_at %}
+                            <p class="text-muted">Updated: {{ post.updated_at|date:"H:i d.m.Y" }} <i>(edit)</i></p>
+                        {% else %}
+                            <p class="text-muted">Created: {{ post.created_at|date:"H:i d.m.Y" }}</p>
+                        {% endif %}
+                    </div> 
                 </li>
             </div>
             {% empty %}

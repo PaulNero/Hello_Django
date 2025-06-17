@@ -8,10 +8,6 @@ from .models import Profile
 
 profiles = {}
 
-# Create your views here.
-def index(request: HttpRequest) -> HttpResponse:
-    return render(request, 'index.html', context={'title': 'Home Page'})
-
 # #TODO: Перенести в БД
 # user_data = {
 #     1: {

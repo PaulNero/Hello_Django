@@ -1,6 +1,6 @@
 from django.urls import path, register_converter, converters
 # from .views import index, profile_user, profiles_list 
-from .views import index, UsersListView, UserDetailView, UserUpdateView, UserCreateView, UserDeleteView, users_list_paginated
+from .views import UsersListView, UserDetailView, UserUpdateView, UserCreateView, UserDeleteView, users_list_paginated
 
 # class YearConverter:
 #     regex = '[0-9]{4}'

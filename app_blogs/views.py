@@ -7,9 +7,6 @@ from django.urls import reverse_lazy,  reverse
 from django.core.paginator import Paginator
 from django.db.models import Count, Avg, Min, Max, F
 
-class AboutView(TemplateView):
-    template_name = 'about.html'
-
 class PostListView(ListView):
     model = Post
     template_name = 'app_blogs/posts_list.html'

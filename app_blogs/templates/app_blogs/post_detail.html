@@ -28,7 +28,10 @@
                                         Нет тегов
                                     {% endfor %}
                                 </h6>
-          <p>{{ post.content }}</p>
+          <div class="card card">
+            <img src="{{ file.file.url }}" alt="Файл" style="max-width: 300px;">
+            <p>{{ post.content }}</p>
+          </div>
           {% if post.created_at != post.updated_at %}
             <p class="text-muted">Updated: {{ post.updated_at|date:"H:i d.m.Y" }} <i>(edit)</i></p>
           {% else %}
@@ -42,8 +45,15 @@
               <img class="rounded-circle avatar-img-mini" src="{{ post.author.get_avatar_url }}" alt="User Avatar">
             </a>
           <p class="text-muted">✍️: {{ post.author.nickname }}</p>
+          <div class="<div class="card-group">
+            <div class="card">
+
+            {{ post.file.pk }}
+            </div>
+          
       </div>
       <div class="card-actions">
+          <a href="{% url 'file_upload' model_name post.pk %}" class="btn btn-primary">File upload</a> 
           <a href="{% url 'post_update' post.pk %}" class="btn btn-primary">Edit</a>
           <a href="{% url 'post_delete' post.pk %}" class="btn btn-danger">Delete</a>
           </div>

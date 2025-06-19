@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone # Импортируем timezone
 from django.urls import reverse
+from app_files.models import File
+from django.contrib.contenttypes.fields import GenericRelation
 
 # class PublishedManager(models.Manager):
 
@@ -13,7 +15,6 @@ class TimeStampedModel (models.Model):
 
     class Meta:
         abstract = True
-
 
 class Post(TimeStampedModel):
 
@@ -30,7 +31,8 @@ class Post(TimeStampedModel):
 
     title = models.CharField(max_length=200)
     content = models.TextField(blank=True)
-    author = models.ForeignKey('app_users.Profile', default=5, on_delete=models.SET_NULL ,null=True, related_name='posts')
+    author = models.ForeignKey("app_users.Profile", default=5, on_delete=models.SET_NULL ,null=True, related_name='posts')
+    files = GenericRelation(File, related_query_name='posts', blank=True, null=True)
     # is_published = models.BooleanField(default=True)
     status = models.CharField(choices=POST_STATUS_CHOICES, default=POST_STATUS_CHOICES[0][0])
     views = models.PositiveIntegerField(default=0)
@@ -45,6 +47,9 @@ class Post(TimeStampedModel):
     
     def get_absolute_url(self):
         return reverse('post_detail', kwargs = {'pk': self.pk})
+
+    def get_url(self):
+        return self.files.url
 
     class Meta:
         ordering = ['-created_at']

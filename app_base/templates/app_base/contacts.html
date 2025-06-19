@@ -1,0 +1,36 @@
+{% extends 'app_base/base.html' %}
+
+{% block content %}
+<h1>Contacts</h1>
+<div class="container">
+    <Breadcrumb>
+        <nav aria-label="breadcrumb" class="main-breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Contact Us</li>
+                <!-- <li class="breadcrumb-item"><a href="{% url 'profiles_list' %}">Profiles</a></li> -->
+            </ol>
+        </nav>
+    </Breadcrumb>
+
+    <h2>Contact us</h2>
+    <form action={% url 'contacts' %} method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                <div class="row">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {{ field.help_text }}
+                    <div class="form-error">{{ field.errors }}</div>
+                </div>
+            </div>
+        {% endfor%}
+        <button type="submit" class="btn btn-primary">Send</button>
+    </form>
+</div>
+
+
+{% endblock %}
+
+{% block footer %}{% endblock %}

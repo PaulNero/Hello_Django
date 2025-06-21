@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'app_users',
     'app_blogs',
     'app_base',
+    'app_files',
 ]
 
 MIDDLEWARE = [
@@ -132,6 +133,9 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = 'media/'
 
 
 # Default primary key field type

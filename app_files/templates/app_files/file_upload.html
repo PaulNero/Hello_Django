@@ -1,0 +1,27 @@
+{% extends 'app_base/base.html' %}
+
+{% block title %}File upload{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <Breadcrumb>
+        <nav aria-label="breadcrumb" class="main-breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">File upload</li>
+                <!-- <li class="breadcrumb-item"><a href="{% url 'profiles_list' %}">Profiles</a></li> -->
+            </ol>
+        </nav>
+    </Breadcrumb>
+        
+    <h1>file upload</h1>
+    <p>Ну, мы))</p>
+        <form action="{% url 'file_upload' model_name object_id %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+</div>
+{% endblock %}
+{% block footer %}{% endblock %}

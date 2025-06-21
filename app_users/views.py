@@ -133,6 +133,11 @@ class UserDetailView(DetailView):
     context_object_name = 'user_data'
     pk_url_kwarg = 'pk'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['model_name'] = self.object._meta.model_name
+        return context
+
 class UserDeleteView(DeleteView):
     model = Profile
     template_name = 'app_users/user_delete.html'

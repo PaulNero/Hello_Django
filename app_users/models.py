@@ -1,6 +1,8 @@
 from django.db import models
 from django.urls import reverse
 from django.templatetags.static import static
+from app_files.models import File
+from django.contrib.contenttypes.fields import GenericRelation
 
 # Create your models here.
 class Profile(models.Model):
@@ -21,6 +23,7 @@ class Profile(models.Model):
     last_name = models.CharField(max_length=50, null=True, blank=True)
     nickname = models.CharField(max_length=50, null=False, unique=True)
     image_url = models.URLField(max_length=300, null=True, blank=True)
+    files = GenericRelation(File)
     age = models.IntegerField(null=True, blank=True)
     sex = models.CharField(choices=USER_SEX_CHOICES, default=USER_SEX_CHOICES[0][0])
     position = models.CharField(max_length=100, null=True, blank=True)
@@ -42,4 +45,15 @@ class Profile(models.Model):
             return static('img/default_woman_avatar.svg')
         else:
             return static('img/default_man_avatar.svg')
+
+    # def get_avatar_url(self):
+    #     if self.files:
+    #         return self.files
+    #     elif self.sex == 'F':
+    #         return static('img/default_woman_avatar.svg')
+    #     else:
+    #         return static('img/default_man_avatar.svg')
+
+    def get_absolute_url(self):
+        return reverse('profile_user', kwargs = {'pk': self.pk})
         

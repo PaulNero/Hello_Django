@@ -6,6 +6,12 @@ from django.views.decorators.http import require_POST
 from django.urls import reverse_lazy,  reverse
 from django.core.paginator import Paginator
 from django.db.models import Count, Avg, Min, Max, F
+from .forms import PostForm, CommentForm
+from django.contrib import messages
+
+# Create your views here.
+
+
 
 class PostListView(ListView):
     model = Post
@@ -39,6 +45,11 @@ class PostDetailView(DetailView):
         self.object.save(update_fields=['views'])
         self.object.refresh_from_db(fields=['views'])
         return super().get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['model_name'] = self.object._meta.model_name
+        return context
 
 class PostDeleteView(DeleteView):
     model = Post
@@ -48,15 +59,25 @@ class PostDeleteView(DeleteView):
     pk_url_kwarg = 'pk'
 
 class PostCreateView(CreateView):
+    form_class = PostForm
     model = Post
     template_name = "app_blogs/post_create.html"
-    fields = ['title', 'content', 'status']
+    # fields = ['title', 'content', 'status']
     # success_url = reverse_lazy('posts_list')
+    
+    def form_valid(self, form):
+        messages.success(self.request, "Пост успешно создан")
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, "Ошибка при создании поста")
+        return super().form_invalid(form)
 
 class PostUpdateView(UpdateView):
+    form_class = PostForm
     model = Post
     template_name = "app_blogs/post_update.html"
-    fields = ['title', 'content', 'status']
+    # fields = ['title', 'content', 'status']
     pk_url_kwarg = 'pk'
     # success_url = reverse_lazy('posts_list')
 
@@ -86,8 +107,9 @@ def posts_list_paginated(request):
 
 class CommentCreateView(CreateView):
     model = Comment
+    form_class = CommentForm
     template_name = "app_blogs/post_detail.html"
-    fields = ['content']
+    # fields = ['content']
     # success_url = reverse_lazy('posts_list')
     
     def get_context_data(self, **kwargs):
@@ -104,6 +126,18 @@ class CommentCreateView(CreateView):
 
     def get_success_url(self):
         return reverse('post_detail', kwargs={'pk': self.kwargs['pk']})
+
+    # :TODO потом разобраться, то что выше работает
+    # post = get_object_or_404(Post, pk=self.kwargs['pk'])
+    
+    # form = CommentForm(request.POST)
+    # if form.is_valid():
+        # comment = form.save(commit=False)
+        # comment.post = post
+        # comment.save()
+    #     return redirect('post_detail', pk=post.pk)
+
+    # return redirect('post_detail', pk=post.pk')
 
 # @require_POST
 # def create_comment(request: HttpRequest, pk: int) -> HttpResponse:

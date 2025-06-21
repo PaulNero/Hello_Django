@@ -7,6 +7,10 @@ from django.urls import reverse_lazy,  reverse
 from django.core.paginator import Paginator
 from django.db.models import Count, Avg, Min, Max, F
 from .forms import PostForm, CommentForm
+from django.contrib import messages
+
+# Create your views here.
+
 
 
 class PostListView(ListView):
@@ -60,6 +64,14 @@ class PostCreateView(CreateView):
     template_name = "app_blogs/post_create.html"
     # fields = ['title', 'content', 'status']
     # success_url = reverse_lazy('posts_list')
+    
+    def form_valid(self, form):
+        messages.success(self.request, "Пост успешно создан")
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, "Ошибка при создании поста")
+        return super().form_invalid(form)
 
 class PostUpdateView(UpdateView):
     form_class = PostForm

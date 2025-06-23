@@ -4,7 +4,10 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy,  reverse 
 from .models import Profile
-
+from .forms import LoginForm
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 profiles = {}
 
@@ -182,8 +185,6 @@ class UserUpdateView(UpdateView):
     pk_url_kwarg = 'pk'
     def get_success_url(self):
         return reverse_lazy('profile_user', args=[self.object.pk])
-    
-    
 
 def users_list_paginated(request):
         # Важна сортировка!
@@ -200,3 +201,33 @@ def users_list_paginated(request):
             'total_count': all_users_qs.count()
             }
         return render(request, 'app_users/users_list_paginated.html', context)
+
+def user_login(request: HttpRequest) -> HttpResponse:
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            user = authenticate(request, username=cd['username'], password=cd['password'])
+            if user is not None and user.is_active:
+                login(request, user)
+                messages.success(request, "login successfull")
+                return redirect('index')
+            else:
+                messages.error(request, "login unsuccessable")
+
+            # user = form.save()
+            # return redirect('index')
+    else:
+        form = LoginForm()
+        return render(request, 'app_users/user_login.html', context={'form': form})
+    
+@login_required
+def user_logout(request: HttpRequest) -> HttpResponse:
+    if request.method == 'POST':
+        logout(request)
+    return redirect("user_login")
+
+
+
+
+

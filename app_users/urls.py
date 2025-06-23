@@ -1,5 +1,6 @@
 from django.urls import path, register_converter, converters
-from .views import UsersListView, UserDetailView, UserUpdateView, UserCreateView, UserDeleteView, users_list_paginated
+from .views import UsersListView, UserDetailView, UserUpdateView, UserCreateView, UserDeleteView, users_list_paginated, user_login, user_logout
+
 # from django.conf import settings
 # from django.conf.urls.static import static
 
@@ -25,6 +26,8 @@ urlpatterns = [
     path('profile/update/<int:pk>/', UserUpdateView.as_view(), name='user_update'),
     path('profile/create/', UserCreateView.as_view(), name='user_registration'),
     path('profiles', users_list_paginated, name='profiles_list'),
+    path('login', user_login, name='user_login'),
+    path('logout', user_logout, name='user_logout'),
     # static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 ]
 

@@ -53,7 +53,7 @@
           
       </div>
       <div class="card-actions">
-          <a href="{% url 'file_upload' model_name post.pk %}" class="btn btn-primary">File upload</a> 
+          {% comment %}<a href="{% url 'file_upload' model_name post.pk %}" class="btn btn-primary">File upload</a> TODO: доделать  {% endcomment %}
           <a href="{% url 'post_update' post.pk %}" class="btn btn-primary">Edit</a>
           <a href="{% url 'post_delete' post.pk %}" class="btn btn-danger">Delete</a>
           </div>
@@ -65,11 +65,12 @@
     {% for comment in post.comments.all %}
       <li class='list-group-item'>
         <p>{{ comment.content }}</p>
-        <a href="{% url 'profile_user' post.author.pk %}"> 
-              <img class="rounded-circle avatar-img-mini" src="{{ post.author.get_avatar_url }}" alt="User Avatar">
+        <a href="{% url 'profile_user' comment.author.pk %}"> 
+              <img class="rounded-circle avatar-img-mini" src="{{ comment.author.get_avatar_url }}" alt="User Avatar">
             </a>
         <p class="text-muted">✍️: {{ comment.author.nickname }}</p>
         <p class='text-muted'>Создано: {{ comment.created_at|date:'H:i d.m.y'}}</p>
+        <button type="button" class="btn btn-danger" onclick="location.href='{% url 'comment_delete' comment.pk %}'">Delete</button>
       </li>
       {% empty %}
             <p>No comments</p>

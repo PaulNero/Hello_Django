@@ -8,6 +8,7 @@ from django.core.paginator import Paginator
 from django.db.models import Count, Avg, Min, Max, F
 from .forms import PostForm, CommentForm
 from django.contrib import messages
+from django.db.models.deletion import ProtectedError
 
 # Create your views here.
 
@@ -57,6 +58,16 @@ class PostDeleteView(DeleteView):
     context_object_name = 'post'
     success_url = reverse_lazy('posts_list')
     pk_url_kwarg = 'pk'
+
+    
+    def form_valid(self, form):
+        try: 
+            res = super().form_valid(form)
+            messages.success(self.request, f"Пост {self.object.pk} успешно удалён")
+            return res
+        except ProtectedError:
+            messages.error(self.request, f"Пост {self.object.pk} нельзя удалить из связанных объектов")
+            return super().form_invalid(form)
 
 class PostCreateView(CreateView):
     form_class = PostForm
@@ -144,6 +155,20 @@ class CommentCreateView(CreateView):
 #     post = get_object_or_404(Post, pk=pk)
 #     post.comments.create(content=request.POST['content'])
 #     return redirect('post_detail', pk=post.pk)
+
+class CommentDeleteView(DeleteView):
+    model = Comment
+    template_name = 'app_blogs/comment_confirm_delete.html'
+    context_object_name = 'comment'
+    success_url = reverse_lazy('posts_list')
+        
+    def form_valid(self, form):
+        messages.success(self.request, "Комментарий успешно удалён")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('post_detail', kwargs={'pk': self.object.post.pk})
+
 
 def posts_stats(request:HttpRequest) -> HttpResponse:
     posts_stats = Post.objects.aggregate(

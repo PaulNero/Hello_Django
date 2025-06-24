@@ -1,9 +1,6 @@
 {% extends 'app_base/base.html' %}
 
-{% block title %}Delete {{ user_data.title }}?{% endblock %}
-
-
-{% block head %}{% endblock %}
+{% block title %}Удаление комментария{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -14,18 +11,16 @@
             <nav aria-label="breadcrumb" class="main-breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-                    <li class="breadcrumb-item"><a href="{% url 'users:profiles_list' %}">Profiles</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Delete {{ user_data.nickname }}</li>
+                    <li class="breadcrumb-item"><a href="{% url 'posts_list' %}">All posts</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Delete {{ comment.content }}</li>
                 </ol>
             </nav>
         </Breadcrumb>
 
         <form method="post">
         {% csrf_token %}
-            <p>Would you delete "{{ user_data.nickname }}" page?</p>
+            <p>Would you delete "{{ comment.content }}"?</p>
         {{ form }}
         <input class="btn btn-danger" type="submit" value="Delete">
     </form>
 {% endblock %}
-
-{% block footer %}{% endblock %}

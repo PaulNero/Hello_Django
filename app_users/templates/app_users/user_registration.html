@@ -12,19 +12,26 @@
         <Breadcrumb>
             <nav aria-label="breadcrumb" class="main-breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+                    {% comment %} <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
                     <li class="breadcrumb-item"><a href="{% url 'profiles_list' %}">Profiles</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">User Registration</li> {% endcomment %}
+                    <li class="breadcrumb-item"><a href="{% url 'users:user_login' %}">User Login</a></li>
                     <li class="breadcrumb-item active" aria-current="page">User Registration</li>
                 </ol>
             </nav>
         </Breadcrumb>
 
-        <form method="post">
-        {% csrf_token %}
-        {{ form.as_p}}
-        
-        <input class="btn btn-primary" type="submit" value="Update">
-    </form>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p}}
+                
+                <input class="btn btn-primary" type="submit" value="Update">
+            </form>
+            </div>
+            
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block footer %}{% endblock %}

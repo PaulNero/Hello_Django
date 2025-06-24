@@ -10,7 +10,7 @@
           <nav aria-label="breadcrumb" class="main-breadcrumb">
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-              <li class="breadcrumb-item"><a href="{% url 'profiles_list' %}">Profiles</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'users:profiles_list' %}">Profiles</a></li>
               <li class="breadcrumb-item active" aria-current="page">User Profile</li>
             </ol>
           </nav>
@@ -22,7 +22,7 @@
           <div class="card">
             <div class="card-body">
               <div class="d-flex flex-column align-items-center text-center">
-                <a href="{% url 'profile_user' user_data.pk %}"> 
+                <a href="{% url 'users:profile_user' user_data.pk %}"> 
                   <div class="d-flex flex-column align-items-center text-center">
                     <img class="rounded-circle avatar-img" src="{{ user_data.get_avatar_url }}" alt="User Avatar">
                       <div class="mt-3">
@@ -115,8 +115,8 @@
                   <div class="row">
                     <div class="col-sm-12">
                       <a class="btn btn-primary" target="__blank" href="{% url 'file_upload' model_name user_data.pk %}"">File upload</a> 
-                      <a class="btn btn-primary" target="__blank" href="{% url 'user_update' user_data.pk %}">Edit</a>
-                      <a class="btn btn-danger" target="__blank" href="{% url 'user_delete' user_data.pk %}">DELETE</a>
+                      <a class="btn btn-primary" target="__blank" href="{% url 'users:user_update' user_data.pk %}">Edit</a>
+                      <a class="btn btn-danger" target="__blank" href="{% url 'users:user_delete' user_data.pk %}">DELETE</a>
                     </div>
                   </div>
                 </div>

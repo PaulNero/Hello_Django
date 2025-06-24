@@ -4,6 +4,12 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy,  reverse 
 from .models import Profile
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.views import LoginView, LogoutView 
+from .forms import CreateUserForm
 
 
 profiles = {}
@@ -142,27 +148,40 @@ class UserDeleteView(DeleteView):
     model = Profile
     template_name = 'app_users/user_delete.html'
     context_object_name = 'user_data'
-    success_url = reverse_lazy('profiles_list')
+    success_url = reverse_lazy('users:profiles_list')
     pk_url_kwarg = 'pk'
 
 class UserCreateView(CreateView):
-    model = Profile
     template_name = "app_users/user_registration.html"
-    fields = ['first_name', 
-                'last_name', 
-                'nickname', 
-                'image_url',
-                'age',
-                'position',
-                'experience',
-                'email',
-                'phone',
-                'mobile',
-                'address',
-                'password']
-    # success_url = reverse_lazy('posts_list')
-    def get_success_url(self):
-        return reverse_lazy('profile_user', args=[self.object.pk])
+    form_class = CreateUserForm
+    success_url = reverse_lazy('users:user_login')
+
+    def form_valid(self, form):
+        res = super().form_valid(form)
+        self.object.set_password(self.object.password)
+        self.object.save()
+        messages.success(self.request, "Пользователь успешно создан")
+        return res
+
+
+# class UserCreateView(CreateView):
+#     model = Profile
+#     template_name = "app_users/user_registration.html"
+#     fields = ['first_name', 
+#                 'last_name', 
+#                 'nickname', 
+#                 'image_url',
+#                 'age',
+#                 'position',
+#                 'experience',
+#                 'email',
+#                 'phone',
+#                 'mobile',
+#                 'address',
+#                 'password']
+#     # success_url = reverse_lazy('posts_list')
+#     def get_success_url(self):
+#         return reverse_lazy('users:profile_user', args=[self.object.pk])
 
 class UserUpdateView(UpdateView):
     model = Profile
@@ -181,9 +200,7 @@ class UserUpdateView(UpdateView):
                 'password']
     pk_url_kwarg = 'pk'
     def get_success_url(self):
-        return reverse_lazy('profile_user', args=[self.object.pk])
-    
-    
+        return reverse_lazy('users:profile_user', args=[self.object.pk])
 
 def users_list_paginated(request):
         # Важна сортировка!
@@ -200,3 +217,34 @@ def users_list_paginated(request):
             'total_count': all_users_qs.count()
             }
         return render(request, 'app_users/users_list_paginated.html', context)
+
+# def user_login(request: HttpRequest) -> HttpResponse:
+#     if request.method == "POST":
+#         form = AuthenticationForm(request.POST)
+#         if form.is_valid():
+#             cd = form.cleaned_data
+#             user = authenticate(request, username=cd['username'], password=cd['password'])
+#             if user is not None and user.is_active:
+#                 login(request, user)
+#                 messages.success(request, "login successfull")
+#                 return redirect('index')
+#             else:
+#                 messages.error(request, "login unsuccessable")
+
+#             # user = form.save()
+#             # return redirect('index')
+#     else:
+#         form = AuthenticationForm()
+#         return render(request, 'app_users/user_login.html', context={'form': form})
+    
+# @login_required
+# def user_logout(request: HttpRequest) -> HttpResponse:
+#     if request.method == 'POST':
+#         logout(request)
+#     return redirect("user_login")
+
+class UserLoginView(LoginView):
+    template_name = "app_users/user_login.html"
+
+
+

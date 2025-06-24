@@ -41,7 +41,7 @@
           <p class="text-muted">Updated: {{ post.updated_at|date:"H:i d.m.Y" }}</p>
           <p class="text-muted">👀: {{ post.views }}</p>
           <p class="text-muted">💬: {{ post.comments.count }}</p>
-          <a href="{% url 'profile_user' post.author.pk %}"> 
+          <a href="{% url 'users:profile_user' post.author.pk %}"> 
               <img class="rounded-circle avatar-img-mini" src="{{ post.author.get_avatar_url }}" alt="User Avatar">
             </a>
           <p class="text-muted">✍️: {{ post.author.nickname }}</p>
@@ -53,29 +53,35 @@
           
       </div>
       <div class="card-actions">
-          <a href="{% url 'file_upload' model_name post.pk %}" class="btn btn-primary">File upload</a> 
+          {% comment %}<a href="{% url 'file_upload' model_name post.pk %}" class="btn btn-primary">File upload</a> TODO: доделать  {% endcomment %}
           <a href="{% url 'post_update' post.pk %}" class="btn btn-primary">Edit</a>
           <a href="{% url 'post_delete' post.pk %}" class="btn btn-danger">Delete</a>
           </div>
     </div>
     <div class='card'>
-      {% include 'app_blogs/comment_form.html' with post_pk=post.pk %}
-  <h2>Комментарии</h2>
-  <ul class='list-group'>
-    {% for comment in post.comments.all %}
-      <li class='list-group-item'>
-        <p>{{ comment.content }}</p>
-        <a href="{% url 'profile_user' post.author.pk %}"> 
-              <img class="rounded-circle avatar-img-mini" src="{{ post.author.get_avatar_url }}" alt="User Avatar">
-            </a>
-        <p class="text-muted">✍️: {{ comment.author.nickname }}</p>
-        <p class='text-muted'>Создано: {{ comment.created_at|date:'H:i d.m.y'}}</p>
-      </li>
-      {% empty %}
-            <p>No comments</p>
-      {% endfor %}
-  </ul>
-</div>
+          {% if user.is_authenticated %}
+            {% include 'app_blogs/comment_form.html' with post_pk=post.pk %}
+          {% else %}
+            <p><a href={% url 'users:user_login' %}>Login</a> or <a href={% url 'users:user_registration' %}>Registrated</a> for send comment</p>
+          {% endif %}
+
+          <h2>Комментарии</h2>
+          <ul class='list-group'>
+            {% for comment in post.comments.all %}
+              <li class='list-group-item'>
+                <p>{{ comment.content }}</p>
+                <a href="{% url 'users:profile_user' comment.author.pk %}"> 
+                      <img class="rounded-circle avatar-img-mini" src="{{ comment.author.get_avatar_url }}" alt="User Avatar">
+                    </a>
+                <p class="text-muted">✍️: {{ comment.author.nickname }}</p>
+                <p class='text-muted'>Создано: {{ comment.created_at|date:'H:i d.m.y'}}</p>
+                <button type="button" class="btn btn-danger" onclick="location.href='{% url 'comment_delete' comment.pk %}'">Delete</button>
+              </li>
+              {% empty %}
+                    <p>No comments</p>
+              {% endfor %}
+          </ul>
+        </div>
   </div>
 </div>
 

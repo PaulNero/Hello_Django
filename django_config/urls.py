@@ -21,7 +21,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('', include('app_base.urls')),
-    path('users/', include('app_users.urls')),
+    path('users/', include('app_users.urls'), name="users"),
     path('blogs/', include('app_blogs.urls')),
     path('files/', include('app_files.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

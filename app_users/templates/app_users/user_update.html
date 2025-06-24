@@ -13,7 +13,7 @@
             <nav aria-label="breadcrumb" class="main-breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-                    <li class="breadcrumb-item"><a href="{% url 'profiles_list' %}">Profiles</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'users:profiles_list' %}">Profiles</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Update {{ user_data.nickname }}</li>
                 </ol>
             </nav>

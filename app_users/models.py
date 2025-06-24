@@ -14,7 +14,7 @@ class Profile(models.Model):
     )
 
     id = models.AutoField(primary_key=True)
-    # user = models.OneToOneField('auth.User', on_delete=models.PROTECT, default=)
+    user = models.OneToOneField('auth.User', on_delete=models.PROTECT, null=True, blank=True)
     first_name = models.CharField(max_length=50, null=True, blank=True)
     last_name = models.CharField(max_length=50, null=True, blank=True)
     nickname = models.CharField(max_length=50, null=False, unique=True)
@@ -31,7 +31,6 @@ class Profile(models.Model):
     mobile = models.CharField(max_length=20, null=True, blank=True, unique=True)
     address = models.JSONField(null=True, blank=True)
     social_links = models.JSONField(null=True, blank=True)
-    password = models.CharField(max_length=128)
     role = models.CharField(default="user")
 
     def get_avatar_url(self):

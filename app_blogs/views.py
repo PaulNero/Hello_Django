@@ -1,4 +1,5 @@
 from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Post, Comment
 from django.views.generic import TemplateView, ListView, DetailView, DeleteView, CreateView, UpdateView
@@ -9,6 +10,7 @@ from django.db.models import Count, Avg, Min, Max, F
 from .forms import PostForm, CommentForm
 from django.contrib import messages
 from django.db.models.deletion import ProtectedError
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -52,7 +54,8 @@ class PostDetailView(DetailView):
         context['model_name'] = self.object._meta.model_name
         return context
 
-class PostDeleteView(DeleteView):
+# @login_required
+class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = 'app_blogs/post_confirm_delete.html'
     context_object_name = 'post'
@@ -69,7 +72,8 @@ class PostDeleteView(DeleteView):
             messages.error(self.request, f"Пост {self.object.pk} нельзя удалить из связанных объектов")
             return super().form_invalid(form)
 
-class PostCreateView(CreateView):
+# @login_required
+class PostCreateView(LoginRequiredMixin, CreateView):
     form_class = PostForm
     model = Post
     template_name = "app_blogs/post_create.html"
@@ -84,13 +88,15 @@ class PostCreateView(CreateView):
         messages.error(self.request, "Ошибка при создании поста")
         return super().form_invalid(form)
 
-class PostUpdateView(UpdateView):
+# @login_required
+class PostUpdateView(LoginRequiredMixin, UpdateView):
     form_class = PostForm
     model = Post
     template_name = "app_blogs/post_update.html"
     # fields = ['title', 'content', 'status']
     pk_url_kwarg = 'pk'
     # success_url = reverse_lazy('posts_list')
+
 
 def posts_list_paginated(request):
         # Важна сортировка!
@@ -116,7 +122,8 @@ def posts_list_paginated(request):
                 .prefetch_related('tags'))
 
 
-class CommentCreateView(CreateView):
+# @login_required
+class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
     form_class = CommentForm
     template_name = "app_blogs/post_detail.html"
@@ -156,7 +163,8 @@ class CommentCreateView(CreateView):
 #     post.comments.create(content=request.POST['content'])
 #     return redirect('post_detail', pk=post.pk)
 
-class CommentDeleteView(DeleteView):
+# @login_required
+class CommentDeleteView(LoginRequiredMixin, DeleteView):
     model = Comment
     template_name = 'app_blogs/comment_confirm_delete.html'
     context_object_name = 'comment'
@@ -169,7 +177,7 @@ class CommentDeleteView(DeleteView):
     def get_success_url(self):
         return reverse('post_detail', kwargs={'pk': self.object.post.pk})
 
-
+@login_required
 def posts_stats(request:HttpRequest) -> HttpResponse:
     posts_stats = Post.objects.aggregate(
         total_posts=Count('pk'), # Общее количество постов

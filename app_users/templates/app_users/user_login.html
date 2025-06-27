@@ -6,16 +6,15 @@
 <div class="container">
     <div class="main-body">
         <div class="row gutters-sm">
-            <div class="col-md-4 mb-3">
                 <h1>Authorization</h1>
                 <form method="post" class="post-form" action="{% url 'users:user_login' %}">
                     {% csrf_token %}
                     {{ form.as_p }}
                     <button class="btn btn-primary" type="submit">Login</button>
                     <a class="btn btn-primary" target="__blank" href="{% url 'users:user_registration' %}">Registration</a>
+                    <a class="btn btn-primary" target="__blank" href="{% url 'users:user_password_reset' %}">I fogot password :(</a>
                 </form>
             </div>
-        </div>
     </div>
 </div>
 {% endblock %}

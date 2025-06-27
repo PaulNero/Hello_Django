@@ -28,7 +28,7 @@
                     <div class="card">
                             <li class='list-group-item'>
                                 <div class="card-body">    
-                                    <a href="{% url 'users:profile_user' user_data.pk %}"> 
+                                    <a href="{% url 'users:user_profile' user_data.pk %}"> 
                                         <div class="d-flex flex-column align-items-center text-center">
                                             <img class="rounded-circle avatar-img" src="{{ user_data.get_avatar_url }}" alt="User Avatar">
                                                 <div class="mt-3">

@@ -41,7 +41,7 @@
           <p class="text-muted">Updated: {{ post.updated_at|date:"H:i d.m.Y" }}</p>
           <p class="text-muted">👀: {{ post.views }}</p>
           <p class="text-muted">💬: {{ post.comments.count }}</p>
-          <a href="{% url 'users:profile_user' post.author.pk %}"> 
+          <a href="{% url 'users:user_profile' post.author.pk %}"> 
               <img class="rounded-circle avatar-img-mini" src="{{ post.author.get_avatar_url }}" alt="User Avatar">
             </a>
           <p class="text-muted">✍️: {{ post.author.nickname }}</p>
@@ -70,7 +70,7 @@
             {% for comment in post.comments.all %}
               <li class='list-group-item'>
                 <p>{{ comment.content }}</p>
-                <a href="{% url 'users:profile_user' comment.author.pk %}"> 
+                <a href="{% url 'users:user_profile' comment.author.pk %}"> 
                       <img class="rounded-circle avatar-img-mini" src="{{ comment.author.get_avatar_url }}" alt="User Avatar">
                     </a>
                 <p class="text-muted">✍️: {{ comment.author.nickname }}</p>

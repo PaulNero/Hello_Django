@@ -50,5 +50,5 @@ class Profile(models.Model):
     #         return static('img/default_man_avatar.svg')
 
     def get_absolute_url(self):
-        return reverse('profile_user', kwargs = {'pk': self.pk})
+        return reverse('user_profile', kwargs = {'pk': self.pk})
         

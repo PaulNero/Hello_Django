@@ -107,7 +107,7 @@ profiles = {}
 
 
 
-# def profile_user(request, user_id):
+# def user_profile(request, user_id):
 #     if not user_data:
 #         return HttpResponseNotFound('User not found')
     
@@ -181,7 +181,7 @@ class UserCreateView(CreateView):
 #                 'password']
 #     # success_url = reverse_lazy('posts_list')
 #     def get_success_url(self):
-#         return reverse_lazy('users:profile_user', args=[self.object.pk])
+#         return reverse_lazy('users:user_profile', args=[self.object.pk])
 
 class UserUpdateView(UpdateView):
     model = Profile
@@ -200,7 +200,7 @@ class UserUpdateView(UpdateView):
                 'password']
     pk_url_kwarg = 'pk'
     def get_success_url(self):
-        return reverse_lazy('users:profile_user', args=[self.object.pk])
+        return reverse_lazy('users:user_profile', args=[self.object.pk])
 
 def users_list_paginated(request):
         # Важна сортировка!

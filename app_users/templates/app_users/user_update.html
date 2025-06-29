@@ -12,9 +12,10 @@
         <Breadcrumb>
             <nav aria-label="breadcrumb" class="main-breadcrumb">
                 <ol class="breadcrumb">
+                    {% include "app_base/_breadcrumb_user.html" %}
                     <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
                     <li class="breadcrumb-item"><a href="{% url 'users:profiles_list' %}">Profiles</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Update {{ user_data.nickname }}</li>
+                    <li class="breadcrumb-item active" aria-current="page">Update {{ user_data.username }} Data</li>
                 </ol>
             </nav>
         </Breadcrumb>

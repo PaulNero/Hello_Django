@@ -27,11 +27,11 @@ def make_unpublished(post, request, queryset):
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'author__nickname', 'status', 'unmodified_since', 'created_at', 'updated_at', 'views']
+    list_display = ['id', 'title', 'author__username', 'status', 'unmodified_since', 'created_at', 'updated_at', 'views']
     list_display_links = ["id", "title"]
     list_editable = ["status"]
 
-    search_fields = ["author__nickname", "title", "content", "tags__name"]
+    search_fields = ["author__username", "title", "content", "tags__name"]
 
     ordering = ["-created_at"]
 
@@ -67,7 +67,7 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = ['id', 'post', 'author', 'content', 'created_at']
     list_display_links = ["id", "content"]
 
-    search_fields = ["author__nickname", "title", "content"]
+    search_fields = ["author__username", "title", "content"]
 
     ordering = ["-created_at"]
 

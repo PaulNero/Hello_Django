@@ -1,36 +1,48 @@
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib.auth.models import User
 from .models import Profile
 from django import forms
 
 
 class CreateUserForm(UserCreationForm):
-    nickname = forms.CharField(max_length=50, required=True)
+    username = forms.CharField(max_length=50, required=True)
 
     class Meta:
-        model = User
-        fields = ['nickname', 'password1', 'password2']
+        model = Profile
+        fields = ['username', 'password1', 'password2']
 
-    def clean_nickname(self):
-        nickname = self.cleaned_data.get('nickname')
-        if Profile.objects.filter(nickname=nickname).exists():
+        widgets = {
+            'username': forms.TextInput(attrs={"class": "form-control"}),
+            'password1': forms.PasswordInput(attrs={"class": "form-control"}),
+            'password2': forms.PasswordInput(attrs={"class": "form-control"}),
+        }
+
+        labels = {
+            'username':'Enter Username',
+            'password1':'Enter password',
+            'password2':'Enter password',
+        }
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if Profile.objects.filter(username=username).exists():
             raise forms.ValidationError('Этот никнейм уже занят.')
-        return nickname
+        return username
 
 
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        nickname = self.cleaned_data['nickname']
-        user.username = nickname #кладём никнейм как юзер нейм в базовую модель авторизации в джанге
-        if commit:
-            user.save()
-            Profile.objects.create(user=user, nickname=nickname)
-        return user
+    # def save(self, commit=True):
+    #     user = super().save(commit=False)
+    #     username = self.cleaned_data['username']
+    #     user.username = username #кладём никнейм как юзер нейм в базовую модель авторизации в джанге
+    #     if commit:
+    #         user.save()
+    #         Profile.objects.create(user=user, username=username)
+    #     return user
 
 
     # class Meta:
     #     model = get_user_model()
-    #     fields = ('nickname', 'password', 'password confirm')
+    #     fields = ('username', 'password', 'password confirm')
 
     # def clean_password2(self):
     #     password1 = self.cleaned_data["password"]
@@ -41,12 +53,12 @@ class CreateUserForm(UserCreationForm):
     #             code='password_mismatch')
     #     return password2
 
-    # def clean_nickname(self):
-    #     nickname = self.cleaned_data.get("nickname")
-    #     if nickname and get_user_model().objects.filter(nickname=nickname).exists():
+    # def clean_username(self):
+    #     username = self.cleaned_data.get("username")
+    #     if username and get_user_model().objects.filter(username=username).exists():
     #         raise forms.ValidationError(
-    #             self.error_messages['nickname_exists'],
-    #             code='nickname_exists',
+    #             self.error_messages['username_exists'],
+    #             code='username_exists',
     #         )
-    #     return nickname
+    #     return username
         

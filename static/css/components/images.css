@@ -11,3 +11,10 @@
     object-fit: cover;  
     border-radius: 50%;
 }
+
+.avatar-img-logined-profile {
+    width: 25px;
+    height: 25px;
+    object-fit: cover;  
+    border-radius: 50%;
+}

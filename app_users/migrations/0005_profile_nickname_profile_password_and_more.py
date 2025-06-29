@@ -12,8 +12,8 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='profile',
-            name='nickname',
-            field=models.CharField(default='Unusual Nickname', max_length=50),
+            name='username',
+            field=models.CharField(default='Unusual username', max_length=50),
         ),
         migrations.AddField(
             model_name='profile',

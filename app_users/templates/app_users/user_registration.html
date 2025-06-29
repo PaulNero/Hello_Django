@@ -12,6 +12,7 @@
         <Breadcrumb>
             <nav aria-label="breadcrumb" class="main-breadcrumb">
                 <ol class="breadcrumb">
+                    {% include "app_base/_breadcrumb_user.html" %}
                     {% comment %} <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
                     <li class="breadcrumb-item"><a href="{% url 'profiles_list' %}">Profiles</a></li>
                     <li class="breadcrumb-item active" aria-current="page">User Registration</li> {% endcomment %}
@@ -23,9 +24,17 @@
 
             <form method="post">
                 {% csrf_token %}
-                {{ form.as_p}}
-                
-                <input class="btn btn-primary" type="submit" value="Update">
+                {% comment %} {{ form.as_p}} {% endcomment %}
+                {% for field in form %}
+                    <div>
+                        <label for='{{ field.id_for_label }}'>{{ field.label }}</label>
+                        <div class='row'>
+                            {{ field }}<br>
+                            <div class='form-error'>{{ field.error }}</div>            
+                        </div>
+                    </div>
+                {% endfor %}
+                <input class="btn btn-primary" type="submit" value="Create account">
             </form>
             </div>
             

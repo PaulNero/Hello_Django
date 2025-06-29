@@ -27,13 +27,14 @@
     
     <!-- Page specific styles -->
     {% block styles %}{% endblock %}
-    
+
     {% block head %}{% endblock %}
 </head>
 <body>
     {% include 'app_base/messages.html' %}
     <header class="site-header">
-        {% block header %}{% endblock %}
+        {% block header %}
+        {% endblock %}
     </header>
 
     <main class="site-main">

@@ -1,0 +1,8 @@
+<li class="breadcrumb-item active" aria-current="page">
+    {% if request.user.is_authenticated %}
+        <img src="{{ request.user.get_avatar_url }}" alt="User Avatar" class="rounded-circle avatar-img-logined-profile">
+        <span>{{ request.user.username }}</span>
+    {% else %}
+        <span>Гость</span>
+    {% endif %}
+</li>

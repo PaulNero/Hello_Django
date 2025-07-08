@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'rest_framework', # Подключение DRF
     'app_users',
     'app_blogs',
     'app_base',
@@ -145,5 +146,8 @@ LOGIN_REDIRECT_URL = reverse_lazy("index")
 LOGOUT_REDIRECT_URL = reverse_lazy("users:user_login")  
 LOGIN_URL = reverse_lazy("users:user_login")
 
+# TODO: Work with SMTP
 # EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+AUTH_USER_MODEL = "app_users.Profile"

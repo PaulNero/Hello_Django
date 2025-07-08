@@ -2,6 +2,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Post, Comment
+
 from django.views.generic import TemplateView, ListView, DetailView, DeleteView, CreateView, UpdateView
 from django.views.decorators.http import require_POST
 from django.urls import reverse_lazy,  reverse
@@ -27,11 +28,11 @@ class PostListView(ListView):
     # def get_queryset(self):
     #     return (Post.objects
     #         .annotate(
-    #             author_nickname=F('author__nickname'),
+    #             author_username=F('author__username'),
     #             author_image=F('author__image_url'),
     #             category__name=F('category__name'),
     #         )
-    #         .value('pk', 'title', 'content', 'views', 'author_nickname', 'author_image_url', 'category_name', 'created_at', 'tags__name'))
+    #         .value('pk', 'title', 'content', 'views', 'author_username', 'author_image_url', 'category_name', 'created_at', 'tags__name'))
 
 class PostDetailView(DetailView):
     model = Post

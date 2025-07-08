@@ -13,16 +13,17 @@
         <Breadcrumb>
             <nav aria-label="breadcrumb" class="main-breadcrumb">
                 <ol class="breadcrumb">
+                    {% include "app_base/_breadcrumb_user.html" %}
                     <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
                     <li class="breadcrumb-item"><a href="{% url 'users:profiles_list' %}">Profiles</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Delete {{ user_data.nickname }}</li>
+                    <li class="breadcrumb-item active" aria-current="page">Delete {{ user_data.username }}</li>
                 </ol>
             </nav>
         </Breadcrumb>
 
         <form method="post">
         {% csrf_token %}
-            <p>Would you delete "{{ user_data.nickname }}" page?</p>
+            <p>Would you delete "{{ user_data.username }}" page?</p>
         {{ form }}
         <input class="btn btn-danger" type="submit" value="Delete">
     </form>

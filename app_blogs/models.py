@@ -60,7 +60,7 @@ class Comment(TimeStampedModel):
     post = models.ForeignKey(Post, on_delete=models.PROTECT, 
                                 related_name='comments', 
                                 related_query_name='comment') 
-    author = models.ForeignKey('app_users.Profile', default=5, on_delete=models.SET_NULL ,null=True, related_name='comments')
+    author = models.ForeignKey('app_users.Profile', on_delete=models.SET_NULL ,null=True, related_name='comments')
     content = models.TextField()
 
     def __str__(self):

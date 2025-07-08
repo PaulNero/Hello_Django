@@ -1,14 +1,15 @@
 from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
+from django.views import View
 from django.views.generic import ListView, DetailView, DeleteView, CreateView, UpdateView
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy,  reverse 
 from .models import Profile
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.contrib.auth.views import LoginView, LogoutView 
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordChangeForm
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from .forms import CreateUserForm
 
 
@@ -125,13 +126,17 @@ profiles = {}
 #         'user_count': len(user_data)
 #     }
 #     return render(request, 'app_users/users_all_profiles.html', context)
-    
 
-class UsersListView(ListView):
-    model = Profile
-    template_name = 'app_users/users_all_profiles.html'
-    context_object_name = 'users_data'
-    paginate_by = 10
+class UserProfileRouterView(View):
+    def get(self, request, pk=None, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('users:user_login')
+        
+        if pk == request.user.pk:
+            return redirect('users:user_logged')
+        
+        return redirect('users:user_profile', pk=pk)
+# TODO: Добавить подобную обёртку для обновления данных и удаления пользователя
 
 class UserDetailView(DetailView):
     model = Profile
@@ -143,13 +148,18 @@ class UserDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['model_name'] = self.object._meta.model_name
         return context
+    
+class CurrentUserDetailView(UserDetailView):
+    template_name = 'app_users/user_logged_profile.html'
 
-class UserDeleteView(DeleteView):
+    def get_object(self):
+        return self.request.user
+
+class UsersListView(ListView):
     model = Profile
-    template_name = 'app_users/user_delete.html'
-    context_object_name = 'user_data'
-    success_url = reverse_lazy('users:profiles_list')
-    pk_url_kwarg = 'pk'
+    template_name = 'app_users/users_all_profiles.html'
+    context_object_name = 'users_data'
+    paginate_by = 10
 
 class UserCreateView(CreateView):
     template_name = "app_users/user_registration.html"
@@ -158,18 +168,26 @@ class UserCreateView(CreateView):
 
     def form_valid(self, form):
         res = super().form_valid(form)
-        self.object.set_password(self.object.password)
-        self.object.save()
+        # self.object.set_password(self.object.password)
+        # self.object.save()
         messages.success(self.request, "Пользователь успешно создан")
         return res
 
+
+
+class UserDeleteView(DeleteView):
+    model = Profile
+    template_name = 'app_users/user_delete.html'
+    context_object_name = 'user_data'
+    success_url = reverse_lazy('users:profiles_list')
+    pk_url_kwarg = 'pk'
 
 # class UserCreateView(CreateView):
 #     model = Profile
 #     template_name = "app_users/user_registration.html"
 #     fields = ['first_name', 
 #                 'last_name', 
-#                 'nickname', 
+#                 'username', 
 #                 'image_url',
 #                 'age',
 #                 'position',
@@ -183,12 +201,12 @@ class UserCreateView(CreateView):
 #     def get_success_url(self):
 #         return reverse_lazy('users:user_profile', args=[self.object.pk])
 
-class UserUpdateView(UpdateView):
+class UserUpdateView(UpdateView): # TODO Изменить логику изменения данных пользователя только самим пользователем
     model = Profile
     template_name = "app_users/user_update.html"
     fields = ['first_name', 
                 'last_name', 
-                'nickname', 
+                'username', 
                 'image_url',
                 'age',
                 'position',
@@ -196,15 +214,28 @@ class UserUpdateView(UpdateView):
                 'email',
                 'phone',
                 'mobile',
-                'address',
-                'password']
+                'address']
     pk_url_kwarg = 'pk'
+
     def get_success_url(self):
         return reverse_lazy('users:user_profile', args=[self.object.pk])
+    
+class UserPasswordChangeView(PasswordChangeView):
+    template_name = 'app_users/user_password_change.html'
+    form_class = PasswordChangeForm
+
+    def form_valid(self, form):
+        user = form.save()
+        update_session_auth_hash(self.request, user)
+        messages.success(self.request, 'Пароль успешно изменён.')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('users:user_profile', args=[self.request.user.pk])
 
 def users_list_paginated(request):
         # Важна сортировка!
-        all_users_qs = Profile.objects.order_by('nickname')
+        all_users_qs = Profile.objects.order_by('username')
         # 1. Создаем Paginator (10 постов на страницу)
         paginator = Paginator(all_users_qs, 6)
         # 2. Получаем номер страницы из GET-параметра (?page=...)
@@ -245,6 +276,7 @@ def users_list_paginated(request):
 
 class UserLoginView(LoginView):
     template_name = "app_users/user_login.html"
+
 
 
 

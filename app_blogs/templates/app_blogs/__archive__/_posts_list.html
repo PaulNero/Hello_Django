@@ -29,7 +29,7 @@
                         <p class="text-muted">👀: {{ post.views }}</p>
                         <p class="text-muted">💬: {{ post.comments.count }}</p>
                         <img class="rounded-circle avatar-img-mini" src="{{ post.author.get_avatar_url }}" alt="User Avatar">
-                        <p class="text-muted">✍️: {{ post.author.nickname }}</p>
+                        <p class="text-muted">✍️: {{ post.author.username }}</p>
                         <p class="text-muted">Создано: {{ post.created_at|date:"H:i d.m.Y" }}</p>
                         <div class="card-actions">
                             <a href="{% url 'post_update' post.pk %}" class="btn btn-primary">Edit</a>

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'rest_framework', # Подключение DRF
     'app_users',
     'app_blogs',
     'app_base',

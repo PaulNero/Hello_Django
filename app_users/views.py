@@ -136,6 +136,7 @@ class UserProfileRouterView(View):
             return redirect('users:user_logged')
         
         return redirect('users:user_profile', pk=pk)
+# TODO: Добавить подобную обёртку для обновления данных и удаления пользователя
 
 class UserDetailView(DetailView):
     model = Profile

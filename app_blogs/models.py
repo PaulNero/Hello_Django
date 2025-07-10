@@ -3,6 +3,9 @@ from django.utils import timezone # Импортируем timezone
 from django.urls import reverse
 from app_files.models import File
 from django.contrib.contenttypes.fields import GenericRelation
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 # class PublishedManager(models.Manager):
 
@@ -31,7 +34,7 @@ class Post(TimeStampedModel):
 
     title = models.CharField(max_length=200)
     content = models.TextField(blank=True)
-    author = models.ForeignKey("app_users.Profile", default=5, on_delete=models.SET_NULL ,null=True, related_name='posts')
+    author = models.ForeignKey(User, default=5, on_delete=models.SET_NULL ,null=True, related_name='posts')
     files = GenericRelation(File, related_query_name='posts', blank=True, null=True)
     # is_published = models.BooleanField(default=True)
     status = models.CharField(choices=POST_STATUS_CHOICES, default=POST_STATUS_CHOICES[0][0])
@@ -60,7 +63,7 @@ class Comment(TimeStampedModel):
     post = models.ForeignKey(Post, on_delete=models.PROTECT, 
                                 related_name='comments', 
                                 related_query_name='comment') 
-    author = models.ForeignKey('app_users.Profile', on_delete=models.SET_NULL ,null=True, related_name='comments')
+    author = models.ForeignKey(User, on_delete=models.SET_NULL ,null=True, related_name='comments')
     content = models.TextField()
 
     def __str__(self):

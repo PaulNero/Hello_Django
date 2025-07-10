@@ -1,0 +1,50 @@
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: development
+    steps:
+    - name: Test SSH Connection
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        passphrase: ${{ secrets.SERVER_SSH_PASSPHRASE }}
+        port: 22
+        timeout: 60s
+        script: whoami
+
+    - name: Deploy on Server via SSH
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        passphrase: ${{ secrets.SERVER_SSH_PASSPHRASE }}
+        port: 22
+        timeout: 60s
+        script: |
+          cd ~/projects/webapp/Hello_Django
+
+          echo "DJANGO_DEBUG=${{ vars.DJANGO_DEBUG }}" > .env
+          echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> .env
+
+          echo "POSTGRES_DB_NAME=${{ secrets.POSTGRES_DB_NAME }}" >> .env
+          echo "POSTGRES_DB_USER=${{ secrets.POSTGRES_DB_USER }}" >> .env
+          echo "POSTGRES_DB_PASSWORD=${{ secrets.POSTGRES_DB_PASSWORD }}" >> .env
+          echo "POSTGRES_DB_HOST=${{ secrets.POSTGRES_DB_HOST }}" >> .env
+          echo "POSTGRES_DB_PORT=${{ secrets.POSTGRES_DB_PORT }}" >> .env
+
+          git pull origin main || true
+          docker-compose down || true
+          docker system prune -f
+          docker-compose build --no-cache
+          docker-compose up --build -d

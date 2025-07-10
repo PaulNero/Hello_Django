@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  hello_django:
+    build: .
+    container_name: hello_django
+    restart: unless-stopped
+    env_file:
+      - .env

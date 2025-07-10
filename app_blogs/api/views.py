@@ -24,19 +24,15 @@ class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
-    def rerform_create(self, serializer):
-        serializer.save(author=self.request.user)
-
 class TagsViewSet(ModelViewSet):
     queryset = Tags.objects.all()
     serializer_class = TagsSerializer
 
-    def rerform_create(self, serializer):
-        serializer.save(author=self.request.user)
-
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+
+    def get_serializer_context(self)
 
     def rerform_create(self, serializer):
         serializer.save(author=self.request.user)

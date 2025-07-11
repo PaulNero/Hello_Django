@@ -32,7 +32,9 @@ class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
-    def get_serializer_context(self)
+    def get_serializer_context(self):
+        return {'request': self.request}
 
-    def rerform_create(self, serializer):
-        serializer.save(author=self.request.user)
+    # Не актуален, так как get_serializer_context
+    # def rerform_create(self, serializer):
+    #     serializer.save(author=self.request.user)

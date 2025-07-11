@@ -84,3 +84,7 @@ class PostSerializer(serializers.ModelSerializer):
         if 'test' in data['content'].lower():
             raise serializers.ValidationError("Title contains forbidden value")
         return data
+    
+    def create(self, validated_data):
+        validated_data['author'] = self.context['request'].user
+        return super().create(validated_data)

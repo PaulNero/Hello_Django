@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from debug_toolbar.toolbar import debug_toolbar_urls
 
 urlpatterns = [
     path('', include('app_base.urls')),
@@ -28,7 +29,8 @@ urlpatterns = [
     path('api/v1/blogs/', include('app_blogs.api.urls'), name="api.blogs"),
     path('api/v1/users/', include('app_users.api.urls'), name="api.users"),
     path('api/v1/auth/', include("app_auth.api.urls"), name="api.auth"),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += debug_toolbar_urls()

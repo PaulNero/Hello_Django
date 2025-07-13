@@ -32,6 +32,8 @@ ACCESS_TOKEN_LIFETIME = int(os.getenv('ACCESS_TOKEN_LIFETIME'))
 
 ALLOWED_HOSTS = ['*']
 
+INTERNAL_IPS = ["127.0.0.1",] # нужно для debug-toolbar в данный момент
+
 
 # Application definition
 
@@ -44,10 +46,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'django_extensions',
+    'django_filters',
+    'debug_toolbar',
+
     'rest_framework', # Подключение DRF
     'rest_framework.authtoken', # для возможности авторизации по токену, не связано со следующим
     'rest_framework_simplejwt', # для возможности авторизации по jwt токену, не связано с предыдущим
-    "rest_framework_simplejwt.token_blacklist", # Черный список refresh токенов
+    'rest_framework_simplejwt.token_blacklist', # Черный список refresh токенов
 
     'app_users',
     'app_blogs',
@@ -64,6 +69,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'django_config.urls'
@@ -121,11 +127,18 @@ AUTH_PASSWORD_VALIDATORS = [
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.TokenAuthentication',
         # 'rest_framework.authentication.SessionAuthentication', TODO: Можно активировать если использовать header Ключ: X-CSRF-TOKEN и настроить его получение и отправку в Postman
     ],
+
+    "DEFAULT_PAGINATION_CLASS": 'rest_framework.pagination.PageNumberPagination',
+    "PAGE_SIZE": 20,
+
+    "DEFAULT_FILTER_BACKENDS": [
+        'django_filters.rest_framework.DjangoFilterBackend'
+    ]
+
 }
 
 SIMPLE_JWT = {

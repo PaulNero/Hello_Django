@@ -3,6 +3,9 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination
+from .filters import PostFilter
 
 from app_blogs.models import Comment, Category, Tags, Post
 from .serializers import CommentSerializer, CategorySerializer, TagsSerializer, PostWriteSerializer, PostReadSerializer
@@ -18,10 +21,49 @@ from app_auth.api import permissions
 #     serializer_class = CommentSerializer
 #     permission_classes = []
 
+class DefaultPagination(LimitOffsetPagination):
+    page_size = 10
+    
+    page_size_query_param = 'page_size'
+    max_page_size = 20
+
+    limit_query_param = "limit"
+    offset_query_param = "offset"
+
+    def paginate_queryset(self, queryset, request, view=None):
+        # Метод задаёт self.limit, self.offset, self.count и self.request
+        return super().paginate_queryset(queryset, request, view)
+
+    def get_paginated_response(self, data): # Переопределение стандартного метода
+        return Response({
+            'links': {
+                'next': self.get_next_link(),
+                'previous': self.get_previous_link()
+            },
+            'count': self.count,
+            'results': data
+        })
+
 class CommentViewSet(ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    pagination_class = DefaultPagination
+
+    filter_backends = [SearchFilter, OrderingFilter]
+    
+    # Фильтрация
+    filterset_fields = ["post", "author"]
+
+    # Поиск
+    search_fields = ["content",
+                    "=author__username", # Точное совпадение username автора
+                    "^author__email"] # Поиск по email автора начинающегося с ...
+    
+    # Сортировка
+    ordering_fields = ['created_at']
+    ordering = ['-created_at']
+    
 
     # @csrf_exempt ОТКЛЮЧЕНИЕ ПРОВЕРКИ CSRF TOKEN 
     #   (Или использовать header "X-CSRFToken" для POST PUT PATCH DELETE) 
@@ -35,17 +77,36 @@ class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    pagination_classes = DefaultPagination
 
 
 class TagsViewSet(ModelViewSet):
     queryset = Tags.objects.all()
     serializer_class = TagsSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    pagination_classes = DefaultPagination
 
 
 class PostViewSet(ModelViewSet):
-    queryset = Post.objects.all()
+    queryset = Post.objects.prefetch_related('tags', 'category').select_related('author')
+    # queryset = Post.objects.prefetch_related("category", "tags") TODO: Посмотреть работу
     permission_classes = [permissions.IsAuthor | IsAuthenticatedOrReadOnly]
+
+    filter_backends = [SearchFilter, OrderingFilter]
+    
+    # Фильтрация
+    # filterset_fields = ["status"]
+    filterset_class = PostFilter
+
+    # Поиск
+    search_fields = ["title", "content", 
+                    "=author__username", # Точное совпадение username автора
+                    "^author__email"] # Поиск по email автора начинающегося с ...
+    
+    # Сортировка
+    ordering_fields = ['views', 'created_at']
+    ordering = ['-created_at']
+
 
     def get_serializer_context(self):
         return {'request': self.request}

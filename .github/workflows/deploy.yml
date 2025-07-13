@@ -38,6 +38,7 @@ jobs:
           cd ~/projects/webapp/Hello_Django
 
           echo "DJANGO_DEBUG=${{ vars.DJANGO_DEBUG }}" > .env
+          echo "ACCESS_TOKEN_LIFETIME=${{ vars.ACCESS_TOKEN_LIFETIME }}" >> .env
           echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> .env
 
           echo "POSTGRES_DB_NAME=${{ secrets.POSTGRES_DB_NAME }}" >> .env

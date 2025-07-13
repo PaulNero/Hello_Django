@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from dotenv import load_dotenv
 from pathlib import Path
+from datetime import timedelta
 import os
 from django.urls import reverse_lazy 
 
@@ -27,6 +28,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DJANGO_DEBUG')
+ACCESS_TOKEN_LIFETIME = int(os.getenv('ACCESS_TOKEN_LIFETIME'))
 
 ALLOWED_HOSTS = ['*']
 
@@ -40,12 +42,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'django_extensions',
     'rest_framework', # Подключение DRF
+    'rest_framework.authtoken', # для возможности авторизации по токену, не связано со следующим
+    'rest_framework_simplejwt', # для возможности авторизации по jwt токену, не связано с предыдущим
+    "rest_framework_simplejwt.token_blacklist", # Черный список refresh токенов
+
     'app_users',
     'app_blogs',
     'app_base',
     'app_files',
+    'app_auth',
 ]
 
 MIDDLEWARE = [
@@ -111,6 +119,21 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication', TODO: Можно активировать если использовать header Ключ: X-CSRF-TOKEN и настроить его получение и отправку в Postman
+    ],
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=ACCESS_TOKEN_LIFETIME),
+    "ROTATE_REFRESH_TOKENS": True,             # Обновление refresh, если False то только access
+    "BLACKLIST_AFTER_ROTATION": True,          # Cтарый refresh в blacklist
+    "TOKEN_BLACKLIST_ENABLED": True,
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/

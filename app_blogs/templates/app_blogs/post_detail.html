@@ -51,13 +51,17 @@
 
             {{ post.file.pk }}
             </div>
-          
+          </div>
       </div>
-      <div class="card-actions">
+      
+      {% if post.author == user %}
+        <div class="card-actions">
           {% comment %}<a href="{% url 'file_upload' model_name post.pk %}" class="btn btn-primary">File upload</a> TODO: доделать  {% endcomment %}
           <a href="{% url 'post_update' post.pk %}" class="btn btn-primary">Edit</a>
           <a href="{% url 'post_delete' post.pk %}" class="btn btn-danger">Delete</a>
-          </div>
+        </div>
+      
+      {% endif %}
     </div>
     <div class='card'>
           {% if user.is_authenticated %}
@@ -71,12 +75,18 @@
             {% for comment in post.comments.all %}
               <li class='list-group-item'>
                 <p>{{ comment.content }}</p>
-                <a href="{% url 'users:user_profile' comment.author.pk %}"> 
-                      <img class="rounded-circle avatar-img-mini" src="{{ comment.author.get_avatar_url }}" alt="User Avatar">
-                    </a>
-                <p class="text-muted">✍️: {{ comment.author.username }}</p>
+                {% if comment.author %}
+                  <a href="{% url 'users:user_profile' comment.author.pk %} class="d-flex align-items-center gap-2 text-decoration-none"">
+                    <img class="rounded-circle avatar-img-mini" src="{{ comment.author.get_avatar_url }}" alt="User Avatar">
+                    <p class="text-muted">✍️: {{ comment.author.username }}</p>
+                  </a>
+                {% else %}
+                  <span class="text-muted">✍️: Анонимный пользователь</span>
+                {% endif %}
                 <p class='text-muted'>Создано: {{ comment.created_at|date:'H:i d.m.y'}}</p>
-                <button type="button" class="btn btn-danger" onclick="location.href='{% url 'comment_delete' comment.pk %}'">Delete</button>
+                {% if comment.author == user %}
+                  <button type="button" class="btn btn-danger" onclick="location.href='{% url 'comment_delete' comment.pk %}'">Delete</button>
+                {% endif %}
               </li>
               {% empty %}
                     <p>No comments</p>

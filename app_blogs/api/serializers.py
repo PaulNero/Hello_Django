@@ -18,17 +18,22 @@ class PostSerializerDetail(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     author = AuthorSerializerDetail(read_only=True)
-    post = PostSerializerDetail(read_only=True)
+    # post = PostSerializerDetail(read_only=True)
+    post = serializers.PrimaryKeyRelatedField(queryset=Post.objects.all())
     # post_link = serializers.HyperLinkedIdentityField(
     #     view_name = 'post_detail',
     #     lookup_field = "pk",
     #     read_only = True
     # )
 
+    def create(self, validated_data):
+        validated_data['author'] = self.context['request'].user
+        return super().create(validated_data)
+
     class Meta:
         model = Comment
         fields = '__all__'
-        read_only_fields = ["id", "title", "views", "created_at", "updated_at", "author", "post"]
+        read_only_fields = ["id", "views", "created_at", "updated_at"]
 
 # class CommentSerializer(serializers.Serializer):
 #     id = serializers.IntegerField(
@@ -58,16 +63,21 @@ class TagsSerializer(serializers.ModelSerializer):
         model = Tags
         fields = '__all__'
 
-class PostSerializer(serializers.ModelSerializer):
-    author = AuthorSerializerDetail(read_only=True)
-    category = CategorySerializer(read_only=True)
-    tags = TagsSerializer(many=True, read_only=True)
-    comments = CommentSerializer(many=True, read_only=True)
+class PostWriteSerializer(serializers.ModelSerializer):
+    # author = AuthorSerializerDetail(read_only=True)
+    # category = CategorySerializer(many=True)
+    # tags = TagsSerializer(many=True)
+    # comments = CommentSerializer(many=True, read_only=True)
+
+    category = serializers.CharField()
+    tags = serializers.ListField(child=serializers.CharField())
+    # author = AuthorSerializerDetail(read_only=True)
+    # comments = CommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Post
-        fields = '__all__'
-        read_only_fields = ["id", "title", "views", "created_at", "updated_at", "author"]
+        fields = ['title', 'content', 'category', 'tags']
+        read_only_fields = ["id", "views", "created_at", "updated_at", "author"]
         # validators = [
         #     serializers.UniqueTogetherValidator(
         #         queryset = Post.objects.all(),
@@ -86,5 +96,27 @@ class PostSerializer(serializers.ModelSerializer):
         return data
     
     def create(self, validated_data):
-        validated_data['author'] = self.context['request'].user
-        return super().create(validated_data)
+        category_name = validated_data.pop("category")
+        tag_names = validated_data.pop("tags")
+        user = self.context["request"].user
+        # validated_data['author'] = self.context['request'].user
+
+        category, _ = Category.objects.get_or_create(name=category_name)
+        post = Post.objects.create(author=user, category = category, **validated_data)
+
+        for tag_name in tag_names:
+            tag, _ = Tags.objects.get_or_create(name=tag_name)
+            post.tags.add(tag)
+
+        # return super().create(validated_data)
+        return post
+
+class PostReadSerializer(serializers.ModelSerializer):
+    category = CategorySerializer()
+    tags = TagsSerializer(many=True)
+    author = AuthorSerializerDetail()
+    comments = CommentSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Post
+        fields = '__all__'

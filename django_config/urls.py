@@ -26,6 +26,8 @@ urlpatterns = [
     path('files/', include('app_files.urls')),
     
     path('api/v1/blogs/', include('app_blogs.api.urls'), name="api.blogs"),
+    path('api/v1/users/', include('app_users.api.urls'), name="api.users"),
+    path('api/v1/auth/', include("app_auth.api.urls"), name="api.auth"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

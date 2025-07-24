@@ -82,6 +82,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     # success_url = reverse_lazy('posts_list')
     
     def form_valid(self, form):
+        form.instance.author = self.request.user
         messages.success(self.request, "Пост успешно создан")
         return super().form_valid(form)
 
@@ -128,19 +129,20 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
     form_class = CommentForm
     template_name = "app_blogs/post_detail.html"
-    # fields = ['content']
-    # success_url = reverse_lazy('posts_list')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.post = get_object_or_404(Post, pk=self.kwargs['pk'])
+        return super().dispatch(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        post = get_object_or_404(Post, pk=self.kwargs['pk'])
-        context['post'] = post
+        context['post'] = self.post
         return context
 
     def form_valid(self, form):
-        # Привязка комментария к посту
-        post = get_object_or_404(Post, pk=self.kwargs['pk'])
-        form.instance.post = post
+        # Привязка комментария к посту и автора к комментарию
+        form.instance.author = self.request.user
+        form.instance.post = self.post
         return super().form_valid(form)
 
     def get_success_url(self):

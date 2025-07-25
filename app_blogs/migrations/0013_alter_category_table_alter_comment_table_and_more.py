@@ -22,10 +22,10 @@ class Migration(migrations.Migration):
             name='post',
             table=None,
         ),
-        migrations.AlterModelTable(
-            name='posttags',
-            table=None,
-        ),
+        # migrations.AlterModelTable(
+        #     name='posttags',
+        #     table=None,
+        # ),
         migrations.AlterModelTable(
             name='tags',
             table=None,

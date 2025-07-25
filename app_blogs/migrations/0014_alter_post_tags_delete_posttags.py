@@ -10,11 +10,11 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='post',
-            name='tags',
-            field=models.ManyToManyField(related_name='posts', to='app_blogs.tags'),
-        ),
+        # migrations.AddField(
+        #     model_name='post',
+        #     name='tags',
+        #     field=models.ManyToManyField(related_name='posts', to='app_blogs.tags'),
+        # ),
         # migrations.DeleteModel(
         #     name='PostTags',
         # ),

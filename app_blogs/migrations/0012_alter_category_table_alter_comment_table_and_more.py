@@ -27,20 +27,20 @@ class Migration(migrations.Migration):
             name='tags',
             table='blog_app_tags',
         ),
-        migrations.CreateModel(
-            name='PostTags',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app_blogs.post')),
-                ('tag', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app_blogs.tags')),
-            ],
-            options={
-                'db_table': 'blog_app_post_tags',
-            },
-        ),
-        migrations.AlterField(
-            model_name='post',
-            name='tags',
-            field=models.ManyToManyField(related_name='posts', through='app_blogs.PostTags', to='app_blogs.tags'),
-        ),
+        # migrations.CreateModel(
+        #     name='PostTags',
+        #     fields=[
+        #         ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+        #         ('post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app_blogs.post')),
+        #         ('tag', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app_blogs.tags')),
+        #     ],
+        #     options={
+        #         'db_table': 'blog_app_post_tags',
+        #     },
+        # ),
+        # migrations.AlterField(
+        #     model_name='post',
+        #     name='tags',
+        #     field=models.ManyToManyField(related_name='posts', through='app_blogs.PostTags', to='app_blogs.tags'),
+        # ),
     ]

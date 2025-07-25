@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
             name='tags',
             field=models.ManyToManyField(related_name='posts', to='app_blogs.tags'),
         ),
-        migrations.DeleteModel(
-            name='PostTags',
-        ),
+        # migrations.DeleteModel(
+        #     name='PostTags',
+        # ),
     ]

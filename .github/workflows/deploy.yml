@@ -14,7 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     environment: development
     steps:
-    - name: Test SSH Connection
+    - name: Check DNS Connection
+      run: |
+        echo "HOST=${{ secrets.SERVER_HOST }}"
+        nslookup ${{ secrets.SERVER_HOST }} || true
+        ping -c 2 ${{ secrets.SERVER_HOST }} || true
+
+    - name: Check SSH Connection
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.SERVER_HOST }}

@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q, UniqueConstraint
 from django.urls import reverse
 from django.templatetags.static import static
 from app_files.models import File
@@ -27,12 +28,17 @@ class Profile(AbstractUser):
     experience = models.FloatField(null=True, blank=True)
     hobbies = models.JSONField(null=True, blank=True)   
     tags = models.JSONField(null=True, blank=True)
-    email = models.EmailField(null=True, blank=True, unique=True)
+    email = models.EmailField(null=True, blank=True)
     phone = models.CharField(max_length=20, null=True, blank=True, unique=True)
     mobile = models.CharField(max_length=20, null=True, blank=True, unique=True)
     address = models.JSONField(null=True, blank=True)
     social_links = models.JSONField(null=True, blank=True)
     role = models.CharField(default="user")
+
+    class Meta:
+        constraints = [
+            UniqueConstraint(fields=['email'], condition=~Q(email=''), name='unique_email_not_empty')
+        ]
 
     def __str__(self):
         return self.username

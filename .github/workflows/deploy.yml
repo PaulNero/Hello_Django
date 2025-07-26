@@ -71,7 +71,7 @@ jobs:
           echo "POSTGRES_HOST=${{ secrets.POSTGRES_DB_HOST }}" >> .env
           echo "POSTGRES_PORT=${{ secrets.POSTGRES_DB_PORT }}" >> .env
 
-          git pull origin main
+          git pull
           docker-compose down || true
           docker system prune -f
           docker-compose build --no-cache

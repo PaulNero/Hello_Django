@@ -13,93 +13,6 @@ from django.contrib import messages
 from django.db.models.deletion import ProtectedError
 from django.contrib.auth.decorators import login_required
 
-# Create your views here.
-
-
-
-class PostListView(ListView):
-    model = Post
-    template_name = 'app_blogs/posts_list.html'
-    context_object_name = 'posts'
-    # queryset = Post.objects.filter
-    # queryset = Post.objects.filter(is_published=True)
-    paginate_by = 10
-
-    # def get_queryset(self):
-    #     return (Post.objects
-    #         .annotate(
-    #             author_username=F('author__username'),
-    #             author_image=F('author__image_url'),
-    #             category__name=F('category__name'),
-    #         )
-    #         .value('pk', 'title', 'content', 'views', 'author_username', 'author_image_url', 'category_name', 'created_at', 'tags__name'))
-
-class PostDetailView(DetailView):
-    model = Post
-    template_name = 'app_blogs/post_detail.html'
-    context_object_name = 'post'
-    pk_url_kwarg = 'pk'
-    # queryset = Post.objects.filter(is_published=True)
-
-    # Избежание race condition :TODO Реализовать подобное для всех подсчетов в будущем
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        # F-выражение — это способ сказать «обнови поле относительно его текущего значения» прямо в SQL.
-        self.object.views = F('views') + 1
-        self.object.save(update_fields=['views'])
-        self.object.refresh_from_db(fields=['views'])
-        return super().get(request, *args, **kwargs)
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['model_name'] = self.object._meta.model_name
-        return context
-
-# @login_required
-class PostDeleteView(LoginRequiredMixin, DeleteView):
-    model = Post
-    template_name = 'app_blogs/post_confirm_delete.html'
-    context_object_name = 'post'
-    success_url = reverse_lazy('posts_list')
-    pk_url_kwarg = 'pk'
-
-    
-    def form_valid(self, form):
-        try: 
-            res = super().form_valid(form)
-            messages.success(self.request, f"Пост {self.object.pk} успешно удалён")
-            return res
-        except ProtectedError:
-            messages.error(self.request, f"Пост {self.object.pk} нельзя удалить из связанных объектов")
-            return super().form_invalid(form)
-
-# @login_required
-class PostCreateView(LoginRequiredMixin, CreateView):
-    form_class = PostForm
-    model = Post
-    template_name = "app_blogs/post_create.html"
-    # fields = ['title', 'content', 'status']
-    # success_url = reverse_lazy('posts_list')
-    
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        messages.success(self.request, "Пост успешно создан")
-        return super().form_valid(form)
-
-    def form_invalid(self, form):
-        messages.error(self.request, "Ошибка при создании поста")
-        return super().form_invalid(form)
-
-# @login_required
-class PostUpdateView(LoginRequiredMixin, UpdateView):
-    form_class = PostForm
-    model = Post
-    template_name = "app_blogs/post_update.html"
-    # fields = ['title', 'content', 'status']
-    pk_url_kwarg = 'pk'
-    # success_url = reverse_lazy('posts_list')
-
-
 def posts_list_paginated(request):
         # Важна сортировка!
         all_posts_qs = Post.objects.order_by('-created_at')
@@ -123,26 +36,86 @@ def posts_list_paginated(request):
                 .select_related('author', 'category')
                 .prefetch_related('tags'))
 
+class PostDetailView(LoginRequiredMixin, DetailView):
+    model = Post
+    template_name = 'app_blogs/post_detail.html'
+    context_object_name = 'post'
+    pk_url_kwarg = 'pk'
+    # queryset = Post.objects.filter(is_published=True)
 
-# @login_required
+    # Избежание race condition :TODO Реализовать подобное для всех подсчетов в будущем
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        # F-выражение — это способ сказать «обнови поле относительно его текущего значения» прямо в SQL.
+        self.object.views = F('views') + 1
+        self.object.save(update_fields=['views'])
+        self.object.refresh_from_db(fields=['views'])
+        return super().get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['model_name'] = self.object._meta.model_name
+        return context
+
+class PostDeleteView(LoginRequiredMixin, DeleteView):
+    model = Post
+    template_name = 'app_blogs/post_confirm_delete.html'
+    context_object_name = 'post'
+    success_url = reverse_lazy('posts_list')
+    pk_url_kwarg = 'pk'
+
+    
+    def form_valid(self, form):
+        try: 
+            res = super().form_valid(form)
+            messages.success(self.request, f"Пост {self.object.pk} успешно удалён")
+            return res
+        except ProtectedError:
+            messages.error(self.request, f"Пост {self.object.pk} нельзя удалить из связанных объектов")
+            return super().form_invalid(form)
+
+class PostCreateView(LoginRequiredMixin, CreateView):
+    form_class = PostForm
+    model = Post
+    template_name = "app_blogs/post_create.html"
+    # fields = ['title', 'content', 'status']
+    # success_url = reverse_lazy('posts_list')
+    
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        messages.success(self.request, "Пост успешно создан")
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, "Ошибка при создании поста")
+        return super().form_invalid(form)
+
+class PostUpdateView(LoginRequiredMixin, UpdateView):
+    form_class = PostForm
+    model = Post
+    template_name = "app_blogs/post_update.html"
+    # fields = ['title', 'content', 'status']
+    pk_url_kwarg = 'pk'
+    # success_url = reverse_lazy('posts_list')
+
 class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
     form_class = CommentForm
     template_name = "app_blogs/post_detail.html"
 
     def dispatch(self, request, *args, **kwargs):
-        self.post = get_object_or_404(Post, pk=self.kwargs['pk'])
+        self.current_post = get_object_or_404(Post, pk=self.kwargs['pk'])
         return super().dispatch(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['post'] = self.post
+        context['post'] = self.current_post
         return context
 
     def form_valid(self, form):
         # Привязка комментария к посту и автора к комментарию
         form.instance.author = self.request.user
-        form.instance.post = self.post
+        form.instance.post = self.current_post
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -166,7 +139,6 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 #     post.comments.create(content=request.POST['content'])
 #     return redirect('post_detail', pk=post.pk)
 
-# @login_required
 class CommentDeleteView(LoginRequiredMixin, DeleteView):
     model = Comment
     template_name = 'app_blogs/comment_confirm_delete.html'

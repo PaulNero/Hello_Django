@@ -13,32 +13,50 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     environment: development
+    env:
+      PRIMARY_HOST: ${{ secrets.PRIMARY_HOST }}
+      FALLBACK_HOST: ${{ secrets.FALLBACK_HOST }}
+      SERVER_PORT: ${{ secrets.SERVER_PORT }}
+
     steps:
     - name: Check DNS Connection
+      id: pick_host
+      shell: bash
       run: |
-        echo "HOST=${{ secrets.SERVER_HOST }}"
-        nslookup ${{ secrets.SERVER_HOST }} || true
-        ping -c 2 ${{ secrets.SERVER_HOST }} || true
+        echo "Trying primary host $PRIMARY_HOST:$SERVER_PORT"
+        if nc -z -w5 "$PRIMARY_HOST" "$SERVER_PORT"; then
+          echo "Using primary host"
+          echo "HOST=$PRIMARY_HOST" >> "$GITHUB_OUTPUT"
+        else
+          echo "Primary unreachable, trying fallback: $FALLBACK_HOST:$SERVER_PORT"
+          if nc -z -w5 "$FALLBACK_HOST" "$SERVER_PORT"; then
+            echo "Using fallback host"
+            echo "HOST=$FALLBACK_HOST" >> "$GITHUB_OUTPUT"
+          else
+            echo "ERROR: neither host is reachable" >&2
+            exit 1
+          fi
+        fi
 
     - name: Check SSH Connection
       uses: appleboy/ssh-action@v1.0.3
       with:
-        host: ${{ secrets.SERVER_HOST }}
+        host: ${{ steps.pick_host.outputs.HOST }}
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         passphrase: ${{ secrets.SERVER_SSH_PASSPHRASE }}
-        port: 22
+        port: ${{ env.SERVER_PORT }}
         timeout: 60s
         script: whoami
 
     - name: Deploy on Server via SSH
       uses: appleboy/ssh-action@v1.0.3
       with:
-        host: ${{ secrets.SERVER_HOST }}
+        host: ${{ steps.pick_host.outputs.HOST }}
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         passphrase: ${{ secrets.SERVER_SSH_PASSPHRASE }}
-        port: 22
+        port:  ${{ env.SERVER_PORT }}
         timeout: 60s
         script: |
           cd ~/projects/webapp/Hello_Django

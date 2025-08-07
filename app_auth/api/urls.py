@@ -5,8 +5,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenBlacklistView,
 )
-from .views import SessionAuthView, ObtainAuthTokenView, LogoutView
-
+from .views import SessionAuthView, ObtainAuthTokenView, LogoutView, ProfileCreateView
 
 app_name = "api.auth"
 
@@ -21,7 +20,9 @@ urlpatterns = router.urls + [
     path('token/', TokenObtainPairView.as_view(), name='token_jwt_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_jwt_refresh'),
     path('token/blacklist/', TokenBlacklistView.as_view(), name="token_jwt_blacklist"),
-    path('logout/', LogoutView.as_view(), name="token_jwt_logout") 
+    path('logout/', LogoutView.as_view(), name="token_jwt_logout"),
+    # REGISTRATION
+    path('registration/', ProfileCreateView.as_view(), name="profile_registration"),
 ]
 
 

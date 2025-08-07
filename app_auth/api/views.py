@@ -9,6 +9,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
 from rest_framework.authtoken.models import Token
 from .serializers import SessionAuthSerializer
+from rest_framework.generics import CreateAPIView
+from app_users.models import Profile
+from app_users.api.serializers import ProfileRegistrationSerializer
+
 
 # from .serializers import SessionSerializer
 
@@ -85,3 +89,8 @@ class LogoutView(APIView):
         
         except Exception as e:
             return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+class ProfileCreateView(CreateAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileRegistrationSerializer
+

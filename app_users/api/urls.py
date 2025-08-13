@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter 
 # from .views import ProfileViewSet
-from .views import ProfileListView, ProfileRUDView
+from .views import ProfileListView, ProfileRUDView, ProfileChangePasswordViewSet
 
 app_name = "api.users"
 
@@ -10,7 +10,10 @@ router = DefaultRouter()
 
 urlpatterns = router.urls + [
     path('profiles/', ProfileListView.as_view(), name='profiles'),
-    path('profiles/<int:pk>', ProfileRUDView.as_view(), name='profiles_actions')
+    path('profiles/<int:pk>/', ProfileRUDView.as_view(), name='profiles_actions'),
+    path('profiles/<int:pk>/change_password/', 
+            ProfileChangePasswordViewSet.as_view({'post': 'set_password'}), 
+            name='profiles_change_password'),
 ]
 
 # app_name = "api.auth"

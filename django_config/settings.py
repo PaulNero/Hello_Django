@@ -49,6 +49,10 @@ INSTALLED_APPS = [
     'django_filters',
     'debug_toolbar',
 
+    'corsheaders',
+    
+    'drf_spectacular',
+
     'rest_framework', # Подключение DRF
     'rest_framework.authtoken', # для возможности авторизации по токену, не связано со следующим
     'rest_framework_simplejwt', # для возможности авторизации по jwt токену, не связано с предыдущим
@@ -62,6 +66,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -125,6 +130,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",
+#     "http://127.0.0.1:3000",
+# ]
+
+# CORS_ALLOW_CREDENTIALS = True # TODO: Нужно явно перечислять разрешенные домены
+
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True
+
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -137,8 +152,36 @@ REST_FRAMEWORK = {
 
     "DEFAULT_FILTER_BACKENDS": [
         'django_filters.rest_framework.DjangoFilterBackend'
-    ]
+    ], 
 
+    "DEFAULT_PERMISSION_CLASSES": [
+        'rest_framework.permissions.DjangoModelPermissions',
+    ],
+
+    "DEFAULT_THROTTLE_CLASSES": [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        'anon': '100/hour',
+        'user': '1000/hour',
+    },
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+# Swagger
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Hello Django API',
+    'Description': 'API for the Hello Django project',
+    'VERSION': '0.1.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # 'SWAGGER_UI_DIST': 'SIDECAR',
+    # 'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
+    # 'REDOC_DIST': 'SIDECAR',
+    # 'SWAGGER_UI_SETTINGS': {
+    #     'deepLinking': True,
+    #     'persistAuthorization': True,
+    # },
 }
 
 SIMPLE_JWT = {

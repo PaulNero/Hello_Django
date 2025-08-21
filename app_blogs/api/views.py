@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination
+from rest_framework.throttling import UserRateThrottle
 from .filters import PostFilter
 
 from app_blogs.models import Comment, Category, Tags, Post
@@ -107,6 +108,8 @@ class PostViewSet(ModelViewSet):
     # Сортировка
     ordering_fields = ['views', 'created_at']
     ordering = ['-created_at']
+
+    throttle_classes = [UserRateThrottle]
 
 
     def get_serializer_context(self):

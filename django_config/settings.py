@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'debug_toolbar',
 
     'corsheaders',
+    
+    'drf_spectacular',
 
     'rest_framework', # Подключение DRF
     'rest_framework.authtoken', # для возможности авторизации по токену, не связано со следующим
@@ -163,8 +165,23 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {
         'anon': '100/hour',
         'user': '1000/hour',
-    }
+    },
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
 
+# Swagger
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Hello Django API',
+    'Description': 'API for the Hello Django project',
+    'VERSION': '0.1.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # 'SWAGGER_UI_DIST': 'SIDECAR',
+    # 'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
+    # 'REDOC_DIST': 'SIDECAR',
+    # 'SWAGGER_UI_SETTINGS': {
+    #     'deepLinking': True,
+    #     'persistAuthorization': True,
+    # },
 }
 
 SIMPLE_JWT = {

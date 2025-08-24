@@ -5,6 +5,17 @@ Layout styles
     Определяет контейнеры и сетку
     Включает медиа-запросы для адаптивности
 */
+
+.left-sidebar { /* Заготовка под новый дизайн */
+    width: var(--left-sidebar-width);
+    transform: translateX(var(--left-sidebar-transform));
+}
+
+.right-sidebar { /* Заготовка под новый дизайн */
+    width: var(--right-sidebar-width);
+    transform: translateX(var(--right-sidebar-transform));
+}
+
 .site-header {
     background-color: var(--primary-color);
     color: white;
@@ -23,6 +34,13 @@ Layout styles
 }
 
 /* Container */
+
+.layout-container { /* Заготовка под новый дизайн */
+    display: grid;
+    grid-template-columns: var(--left-sidebar-width) 1fr var(--right-sidebar-width);
+    transition: all 0.3s ease;
+}
+
 .container {
     width: 100%;
     max-width: 1200px;

@@ -52,6 +52,9 @@ INSTALLED_APPS = [
     'corsheaders',
     
     'drf_spectacular',
+    
+    'graphene_django', # Подключение GraphQL
+    'graphql_jwt', # Подключение GraphQL JWT для работы с токенами SimpleJWT
 
     'rest_framework', # Подключение DRF
     'rest_framework.authtoken', # для возможности авторизации по токену, не связано со следующим
@@ -139,6 +142,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
+    
+AUTHENTICATION_BACKENDS = [
+    "graphql_jwt.backends.JSONWebTokenBackend",     # для GraphQL JWT
+    "django.contrib.auth.backends.ModelBackend",    # стандартная авторизация Django
+]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
@@ -182,6 +190,13 @@ SPECTACULAR_SETTINGS = {
     #     'deepLinking': True,
     #     'persistAuthorization': True,
     # },
+}
+
+GRAPHENE = {
+    'SCHEMA': 'app_base.api.scheme.scheme',
+    'MIDDLEWARE': [
+        'graphql_jwt.middleware.JSONWebTokenMiddleware',
+    ],
 }
 
 SIMPLE_JWT = {
